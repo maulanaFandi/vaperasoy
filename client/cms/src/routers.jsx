@@ -3,13 +3,15 @@ import { createBrowserRouter, redirect } from "react-router-dom";
 import Layout from "./layout/layout.jsx";
 import Login from "./pages/login.jsx";
 import Home from "./pages/home.jsx";
+import Product from "./pages/products.jsx";
 import AddPoduct from "./pages/add-products.jsx";
 import Staff from "./pages/staff.jsx";
+import AddStaff from "./pages/addStaff.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    loader: () => redirect("/products"),
+    loader: () => redirect("/dashboard"),
   },
   {
     path: "/login",
@@ -23,16 +25,25 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
           {
-            path: "/products",
+            path: "/dashboard",
             element: <Home />,
           },
+          {
+            path: "/products",
+            element: <Product />,
+          }
+          ,
           {
             path: "/add-products",
             element: <AddPoduct />,
           },
           {
             path: "/staff",
-            element: <Home />,
+            element: <Staff />,
+          },
+          {
+            path: "/add-staff",
+            element: <AddStaff />,
           }
         ],
       },

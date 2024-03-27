@@ -175,7 +175,7 @@ export default function FullFeaturedCrudGrid() {
       }}
     >
     <Typography variant="h6" sx={{ textAlign: 'Left', marginBottom: '20px', marginTop: '20px' }}>
-      Staff
+      Products
     </Typography>
       <DataGrid
         rows={rows}
