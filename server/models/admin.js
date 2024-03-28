@@ -1,9 +1,9 @@
-const db = require("../config/database");
+const {db} = require("../config/database");
 const { generate } = require("../helpers/bcrypt");
 
 class AdminModel {
   static getCollection() {
-    return db.collection("Admin");
+    return db.collection("Users");
   }
 
   static async create(args) {
@@ -17,6 +17,10 @@ class AdminModel {
 
   static async findByEmail(email) {
     return await AdminModel.getCollection().findOne({ email: email });
+  }
+
+  static async findByRole(Role) {
+    return await AdminModel.getCollection().findOne({ role: Role });
   }
 }
 

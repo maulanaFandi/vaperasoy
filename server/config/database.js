@@ -14,6 +14,19 @@ const client = new MongoClient(uri, {
     }
 });
 
-const db = client.db("Vaperasoy")
+const db = client.db("Vaperasoy");
 
-module.exports = db
+// Default value for role is 'user'
+const defaultUserRole = 'user';
+
+// Define a function to insert a new user with default role
+async function insertUserWithDefaultRole(user) {
+    const defaultUser = { ...user, role: defaultUserRole };
+    const result = await db.collection('Users').insertOne(defaultUser);
+    return result;
+}
+
+module.exports = {
+    db,
+    insertUserWithDefaultRole
+};
