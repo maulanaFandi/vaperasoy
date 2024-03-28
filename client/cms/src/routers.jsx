@@ -72,9 +72,6 @@ const decodeAccessToken = (accessToken) => {
 const isAdmin = () => {
   const accessToken = localStorage.getItem("access_token");
 
-  const token = decodeAccessToken(accessToken);
-  console.log(token);
-
   if (accessToken) {
     const decodedToken = decodeAccessToken(accessToken);
     return decodedToken.role === "admin";
