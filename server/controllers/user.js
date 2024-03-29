@@ -5,13 +5,13 @@ const UserModel = require("../models/user");
 class UserController {
   static async register(req, res, next) {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, password, birthDate, phoneNumber, gender, IDNumber, address } = req.body;
 
       if (!name || !email || !password) {
         throw { name: "NotEmpty" };
       }
 
-      const newUser = { name, email, password };
+      const newUser = { name, email, password, birthDate, phoneNumber, gender, IDNumber, address };
 
       await UserModel.insertUserWithDefaultRole(newUser);
 

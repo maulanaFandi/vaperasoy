@@ -13,22 +13,30 @@ import {
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 
-const roles = ["Market", "Finance", "Development"];
-const randomRole = () => {
-  return roles[Math.floor(Math.random() * roles.length)];
-};
-
 const fetchData = async () => {
   try {
-    const response = await axios.get("URL_API_ANDA");
+    const response = await axios.get("http://localhost:3000/api/users");
     return response.data.map((item, index) => ({
       ...item,
       id: index + 1, // Atur id unik untuk setiap item
+      age: calculateAge(item.birthDate), // Hitung umur dari tanggal lahir
     }));
   } catch (error) {
     console.error("Error fetching data:", error);
     return [];
   }
+};
+
+// Fungsi untuk menghitung umur dari tanggal lahir
+const calculateAge = (birthDate) => {
+  const today = new Date();
+  const dob = new Date(birthDate);
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+  return age;
 };
 
 export default function ListUser() {
@@ -88,25 +96,17 @@ export default function ListUser() {
     { field: "name", headerName: "Name", width: 180, editable: true },
     { field: "email", headerName: "Email", width: 180, editable: true },
     {
-      field: "age",
+      field: "age", // Ubah field dari 'birthDate' menjadi 'age'
       headerName: "Age",
-      type: "number",
       width: 100,
       align: "left",
       headerAlign: "left",
       editable: true,
     },
     {
-      field: "PhoneNumber",
+      field: "phoneNumber",
       headerName: "Phone Number",
       width: 180,
-      editable: true,
-    },
-    {
-      field: "birthDate",
-      headerName: "Join date",
-      type: "date",
-      width: 150,
       editable: true,
     },
     {
