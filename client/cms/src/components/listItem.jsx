@@ -41,7 +41,7 @@ export const secondaryListItems = (
 
     <NavLink to="/cms/add-staff" icon={<PeopleIcon />} text="Add-Staff" />
 
-    <Link to={"/login"} style={{ textDecoration: "none", color: "inherit" }}>
+    <Link to={"/"} style={{ textDecoration: "none", color: "inherit" }}>
       <ListItemButton onClick={Logout}>
         <ListItemIcon>
           <LogoutIcon />
