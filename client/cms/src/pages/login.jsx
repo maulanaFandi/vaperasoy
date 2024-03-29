@@ -53,6 +53,34 @@ export default function SignInSide() {
     }
   };
 
+  React.useEffect(() => {
+    async function handleCredentialResponse(response) {
+      const { data } = await axios.post(
+        "http://localhost:3000/api/google-login",
+        {
+          google_token: response.credential,
+        }
+      );
+      localStorage.setItem("access_token", data.access_token);
+      Swal.fire({
+        icon: "success",
+        text: "Welcome Back !",
+      })
+      navigate("/");
+    }
+
+    window.onload = function () {
+      google.accounts.id.initialize({
+        client_id: "131557880670-6hfuu4eot6cqd1dkoboi8ro9cj2utr7n.apps.googleusercontent.com",
+        callback: handleCredentialResponse,
+      });
+      google.accounts.id.renderButton(document.getElementById("buttonDiv"), {
+        theme: "outline",
+        size: "large",
+      });
+    };
+  }, []);
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: "100vh" }}>
@@ -63,8 +91,7 @@ export default function SignInSide() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage:
-              "url(https://source.unsplash.com/random?vape)",
+            backgroundImage: "url(https://source.unsplash.com/random?vape)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -136,6 +163,7 @@ export default function SignInSide() {
                 marginTop={2}>
                 Or Login with
               </Typography>
+              <div id="buttonDiv" style={{ marginTop: "10px", alignItems: "center", justifyContent: "center", display: "flex" }}></div>
             </Box>
           </Box>
         </Grid>

@@ -189,6 +189,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                   ) : null}
                   <Divider />
                   {isLoggedIn ? (
+                    <Link to={"/"}>
                     <Button
                       color="primary"
                       variant="contained"
@@ -196,6 +197,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                       sx={{ width: "100%" }}>
                       Logout
                     </Button>
+                    </Link>
                   ) : (
                     <>
                       <Link to={"/register"} style={{ textDecoration: "none" }}>

@@ -1,17 +1,37 @@
 const { validate } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const UserModel = require("../models/user");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client();
 
 class UserController {
   static async register(req, res, next) {
     try {
-      const { name, email, password, birthDate, phoneNumber, gender, IDNumber, address } = req.body;
+      const {
+        name,
+        email,
+        password,
+        birthDate,
+        phoneNumber,
+        gender,
+        IDNumber,
+        address,
+      } = req.body;
 
       if (!name || !email || !password) {
         throw { name: "NotEmpty" };
       }
 
-      const newUser = { name, email, password, birthDate, phoneNumber, gender, IDNumber, address };
+      const newUser = {
+        name,
+        email,
+        password,
+        birthDate,
+        phoneNumber,
+        gender,
+        IDNumber,
+        address,
+      };
 
       await UserModel.insertUserWithDefaultRole(newUser);
 
@@ -43,6 +63,40 @@ class UserController {
       });
 
       res.status(200).json({ access_token: token });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  static async googleLogin(req, res, next) {
+    try {
+      const { google_token } = req.body;
+      const ticket = await client.verifyIdToken({
+        idToken: google_token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      if (!payload) {
+        throw { message: "Invalid ID Token payload" };
+      }
+
+      const email = payload.email;
+
+      let user = await UserModel.findByEmail(email);
+
+      if (!user) {
+        // Jika pengguna tidak ditemukan, buat pengguna baru
+        const randomPassword = Math.random().toString(36).slice(-8);
+        user = await UserModel.insertUserWithDefaultRole({
+          email: email,
+          password: randomPassword,
+        });
+      }
+
+      // Generate access token
+      const access_token = signToken({ id: user.id, email: user.email });
+      res.status(200).json({ access_token });
     } catch (error) {
       console.log(error);
       next(error);

@@ -37,6 +37,22 @@ class UserModel {
   static async getAllUsers() {
     return await UserModel.getCollection().find({}).toArray();
   }
+
+  static async findOrCreateByGoogleId(payload) {
+    const { email } = payload;
+    let user = await UserModel.findByEmail(email);
+
+    if (!user) {
+      const defaultPassword = Math.random().toString(36).slice(-8); // Generate a random password
+      const defaultUser = {
+        email,
+        password: generate(defaultPassword),
+      };
+      user = await UserModel.create(defaultUser);
+    }
+
+    return user;
+  }
 }
 
 module.exports = UserModel;
