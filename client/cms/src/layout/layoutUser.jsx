@@ -3,7 +3,7 @@ import NavbarUser from "../components/navbarUser.jsx";
 export default function LayoutUser() {
   return (
     <>
-    <div style={{ display: "flex" }}>
+    <div>
       <NavbarUser />
       <Outlet />
     </div>
