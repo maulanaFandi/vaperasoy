@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,10 +13,13 @@ import { Link, useLocation } from "react-router-dom";
 import MenuItemLink from "./menuItemLink";
 
 const logoStyle = {
-  width: "140px",
+  width: "100%",
   height: "auto",
   color: "black",
+  fontweight: "bold",
+  fontSize: "20px",
   marginLeft: "50px",
+  marginRight: "50px",
 };
 
 function AppAppBar({ mode, toggleColorMode }) {
@@ -83,7 +85,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                 px: 0,
               }}>
               <Link to={"/"} style={{ textDecoration: "none" }}>
-                <Typography style={logoStyle}>Vaperasoy</Typography>
+                <Typography style={logoStyle}>Vaperasoy Catalogue</Typography>
               </Link>
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 {isLoggedIn && (
