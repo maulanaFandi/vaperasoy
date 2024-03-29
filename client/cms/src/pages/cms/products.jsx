@@ -13,11 +13,6 @@ import {
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 
-const roles = ["Market", "Finance", "Development"];
-const randomRole = () => {
-  return roles[Math.floor(Math.random() * roles.length)];
-};
-
 const fetchData = async () => {
   try {
     const response = await axios.get("URL_API_ANDA");
