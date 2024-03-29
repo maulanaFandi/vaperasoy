@@ -1,17 +1,12 @@
 import * as React from "react";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import { Link } from "react-router-dom";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-const linkStyle = {
-  textDecoration: "none",
-  color: "inherit",
-};
+import NavLink from "../components/navLink";
+import { Link } from "react-router-dom";
+import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 
 const styleFont = {
   marginLeft: "5px",
@@ -26,56 +21,27 @@ const Logout = () => {
 
 export const mainListItems = (
   <React.Fragment>
-    <Link to="/" style={linkStyle}>
-      <ListItemButton>
-        <ListItemIcon>
-          <ShowChartIcon />
-        </ListItemIcon>
-        <ListItemText primary="Dashboard" style={styleFont} />
-      </ListItemButton>
-    </Link>
+    <NavLink to="/cms/dashboard" icon={<ShowChartIcon />} text="Dashboard" />
 
-    <Link to="/cms/products" style={linkStyle}>
-      <ListItemButton>
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Products" style={styleFont} />
-      </ListItemButton>
-    </Link>
+    <NavLink to="/cms/products" icon={<DashboardIcon />} text="Products" />
 
-    <Link to="/cms/staff" style={linkStyle}>
-      <ListItemButton>
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Staff" style={styleFont} />
-      </ListItemButton>
-    </Link>
+    <NavLink to="/cms/staff" icon={<PeopleIcon />} text="Staff" />
+
+    <NavLink to="/cms/users" icon={<PeopleIcon />} text="User" />
   </React.Fragment>
 );
 
 export const secondaryListItems = (
   <React.Fragment>
-    <Link to="/cms/add-products" style={linkStyle}>
-      <ListItemButton>
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Add-Product" style={styleFont} />
-      </ListItemButton>
-    </Link>
+    <NavLink
+      to="/cms/add-products"
+      icon={<DashboardIcon />}
+      text="Add-Product"
+    />
 
-    <Link to="/cms/add-staff" style={linkStyle}>
-      <ListItemButton>
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Add-Staff" style={styleFont} />
-      </ListItemButton>
-    </Link>
+    <NavLink to="/cms/add-staff" icon={<PeopleIcon />} text="Add-Staff" />
 
-    <Link to={"/login"} style={linkStyle}>
+    <Link to={"/login"} style={{ textDecoration: "none", color: "inherit" }}>
       <ListItemButton onClick={Logout}>
         <ListItemIcon>
           <LogoutIcon />

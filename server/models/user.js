@@ -33,6 +33,10 @@ class UserModel {
     };
     return await UserModel.getCollection().insertOne(defaultUser);
   }
+
+  static async getAllUsers() {
+    return await UserModel.getCollection().find({}).toArray();
+  }
 }
 
 module.exports = UserModel;

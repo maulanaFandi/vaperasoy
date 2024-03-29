@@ -8,6 +8,7 @@ import Login from "./pages/login.jsx";
 import Dashboard from "./pages/cms/dashboard.jsx";
 import Product from "./pages/cms/products.jsx";
 import Staff from "./pages/cms/staff.jsx";
+import ListUser from "./pages/cms/listUser.jsx";
 import AddPoduct from "./pages/cms/add-products.jsx";
 import AddStaff from "./pages/cms/addStaff.jsx";
 import Register from "./pages/register.jsx";
@@ -51,10 +52,31 @@ const router = createBrowserRouter([
   //   element: <LayoutUser />,
   //   children: [
   //     {
-
+  //       paath: "/home",
+  //       element: <HomeUser />,
+  //     },
+  //     {
+  //       path: "/products",
+  //       element: <UserProducts />,
+  //     },
+  //     {
+  //       path: "/products/:id",
+  //       element: <UserDetailProducts />,
+  //     },
+  //     {
+  //       path: "/cart",
+  //       element: <UserCart />,
+  //     },
+  //     {
+  //       path: "/checkout",
+  //       element: <UserCheckout />,
+  //     },
+  //     {
+  //       path: "/profile",
+  //       element: <UserProfile />,
   //     }
-  //   ]
-  // }
+  //   ],
+  // },
 
   // {
   //   path: "/public",
@@ -89,6 +111,10 @@ const router = createBrowserRouter([
         element: <Staff />,
       },
       {
+        path: "/cms/users",
+        element: <ListUser />,
+      },
+      {
         path: "/cms/add-products",
         element: <AddPoduct />,
       },
@@ -99,4 +125,5 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
 export default router;
