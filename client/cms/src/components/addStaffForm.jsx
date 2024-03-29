@@ -1,21 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios";
-import Swal from "sweetalert2";
+import axios from "axios"; 
+import Swal from "sweetalert2"; 
 import { Link, useNavigate } from "react-router-dom";
-import {
-  TextField,
-  Button,
-  Typography,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  TextareaAutosize,
-  Grid,
-  Paper,
-} from "@mui/material";
+import { TextField, Button, Typography, Select, MenuItem, FormControl, InputLabel, TextareaAutosize, Grid, Paper } from '@mui/material';
 
-export default function Register() {
+export default function AddProductForm() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -41,7 +30,7 @@ export default function Register() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/register",
+        // "http://localhost:3000/api/register",
         formData,
         {
           headers: {
@@ -66,16 +55,10 @@ export default function Register() {
   };
 
   return (
-    <Grid container spacing={3} justifyContent="center">
+    <Grid container spacing={3} justifyContent="center" alignItems="center">
       <Grid item xs={12} md={6}>
         <Paper elevation={3} style={{ padding: 20 }}>
-          <Typography
-            variant="h4"
-            gutterBottom
-            align="center"
-            fontWeight="bold">
-            Register
-          </Typography>
+          <Typography variant="h4" gutterBottom align="center" fontWeight="bold">Add Staff</Typography>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -88,7 +71,6 @@ export default function Register() {
                   label="Name"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -101,7 +83,6 @@ export default function Register() {
                   label="Email"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -114,7 +95,6 @@ export default function Register() {
                   label="Password"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -127,7 +107,6 @@ export default function Register() {
                   label="Password Confirmation"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -139,7 +118,6 @@ export default function Register() {
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -152,7 +130,6 @@ export default function Register() {
                   label="Phone Number"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -167,7 +144,7 @@ export default function Register() {
                     label="Gender"
                     variant="outlined"
                     fullWidth
-                    required>
+                  >
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
@@ -186,7 +163,6 @@ export default function Register() {
                   label="NIK"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -196,8 +172,7 @@ export default function Register() {
                   value={formData.address}
                   onChange={handleChange}
                   placeholder="Address"
-                  required
-                  style={{ width: "100%", minHeight: 100 }}
+                  style={{ width: '100%', minHeight: 100 }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -205,18 +180,13 @@ export default function Register() {
                   type="submit"
                   variant="contained"
                   color="primary"
-                  fullWidth>
+                  fullWidth
+                >
                   Register
                 </Button>
               </Grid>
             </Grid>
           </form>
-          <Typography align="center" variant="body2" gutterBottom marginTop={2}>
-            Already have an account?{" "}
-            <Link to="/login" className="text-blue-500 hover:underline">
-              Sign In
-            </Link>
-          </Typography>
         </Paper>
       </Grid>
     </Grid>

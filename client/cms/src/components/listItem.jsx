@@ -35,7 +35,7 @@ export const mainListItems = (
       </ListItemButton>
     </Link>
 
-    <Link to="/products" style={linkStyle}>
+    <Link to="/cms/products" style={linkStyle}>
       <ListItemButton>
         <ListItemIcon>
           <DashboardIcon />
@@ -44,7 +44,7 @@ export const mainListItems = (
       </ListItemButton>
     </Link>
 
-    <Link to="/staff" style={linkStyle}>
+    <Link to="/cms/staff" style={linkStyle}>
       <ListItemButton>
         <ListItemIcon>
           <PeopleIcon />
@@ -57,7 +57,7 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <React.Fragment>
-    <Link to="/add-products" style={linkStyle}>
+    <Link to="/cms/add-products" style={linkStyle}>
       <ListItemButton>
         <ListItemIcon>
           <DashboardIcon />
@@ -66,7 +66,7 @@ export const secondaryListItems = (
       </ListItemButton>
     </Link>
 
-    <Link to="/add-staff" style={linkStyle}>
+    <Link to="/cms/add-staff" style={linkStyle}>
       <ListItemButton>
         <ListItemIcon>
           <PeopleIcon />

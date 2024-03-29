@@ -1,67 +1,16 @@
-// import React from "react";
-// import { createBrowserRouter, redirect } from "react-router-dom";
-// import Layout from "./layout/layout.jsx";
-// import Login from "./pages/login.jsx";
-// import Home from "./pages/home.jsx";
-// import Product from "./pages/products.jsx";
-// import AddPoduct from "./pages/add-products.jsx";
-// import Staff from "./pages/staff.jsx";
-// import AddStaff from "./pages/addStaff.jsx";
-
-// const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     loader: () => redirect("/dashboard"),
-//   },
-//   {
-//     path: "/login",
-//     element: <Login />,
-//     loader: () => localStorage.getItem("access_token") && redirect("/"),
-//   },
-//   {
-//     // loader: () => !localStorage.getItem("access_token") && redirect("/login"),
-//     children: [
-//       {
-//         element: <Layout />,
-//         children: [
-//           {
-//             path: "/dashboard",
-//             element: <Home />,
-//           },
-//           {
-//             path: "/products",
-//             element: <Product />,
-//           }
-//           ,
-//           {
-//             path: "/add-products",
-//             element: <AddPoduct />,
-//           },
-//           {
-//             path: "/staff",
-//             element: <Staff />,
-//           },
-//           {
-//             path: "/add-staff",
-//             element: <AddStaff />,
-//           }
-//         ],
-//       },
-//     ],
-//   },
-// ]);
-
-// export default router;
-
 import React from "react";
 import { createBrowserRouter, redirect } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import Layout from "./layout/layout.jsx";
+// import LayoutUser from "./layout/layoutUser.jsx";
 // import PublicPage from "./pages/publicPage.jsx";
-// import CMSPage from "./pages/cmsPage.jsx";
 import Login from "./pages/login.jsx";
-import Home from "./pages/home.jsx";
-import Product from "./pages/products.jsx";
-import {jwtDecode} from "jwt-decode";
+import Dashboard from "./pages/cms/dashboard.jsx";
+import Product from "./pages/cms/products.jsx";
+import Staff from "./pages/cms/staff.jsx";
+import AddPoduct from "./pages/cms/add-products.jsx";
+import AddStaff from "./pages/cms/addStaff.jsx";
+import Register from "./pages/register.jsx";
 
 const isAuthenticated = () => localStorage.getItem("access_token");
 
@@ -86,14 +35,27 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
+    path: "/register",
+    element: <Register />,
+  },
+  {
     path: "/",
     loader: () =>
       isAuthenticated()
         ? isAdmin()
-          ? redirect("/dashboard")
-          : redirect("/public")
-        : redirect("/login"),
+          ? redirect("/cms/dashboard")
+          : redirect("/home")
+        : redirect("/public"),
   },
+  // {
+  //   element: <LayoutUser />,
+  //   children: [
+  //     {
+
+  //     }
+  //   ]
+  // }
+
   // {
   //   path: "/public",
   //   element: <PublicPage />,
@@ -110,21 +72,31 @@ const router = createBrowserRouter([
   //     }
   //   ]
   // },
+
   {
     element: <Layout />,
     children: [
       {
-        path: "/dashboard",
-        element: <Home />,
+        path: "/cms/dashboard",
+        element: <Dashboard />,
       },
       {
-        path: "/dashboard/products",
+        path: "/cms/products",
         element: <Product />,
+      },
+      {
+        path: "/cms/staff",
+        element: <Staff />,
+      },
+      {
+        path: "/cms/add-products",
+        element: <AddPoduct />,
+      },
+      {
+        path: "/cms/add-staff",
+        element: <AddStaff />,
       },
     ],
   },
 ]);
-
-// Fungsi untuk mendekode token. Anda perlu menggantinya dengan fungsi yang sesuai dengan library atau implementasi Anda.
-
 export default router;

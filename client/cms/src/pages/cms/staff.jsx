@@ -1,37 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Box from '@mui/material/Box';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Box from "@mui/material/Box";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Close";
 import {
   GridRowModes,
   DataGrid,
   GridActionsCellItem,
   GridRowEditStopReasons,
-} from '@mui/x-data-grid';
-import { Typography } from '@mui/material';
+} from "@mui/x-data-grid";
+import { Typography } from "@mui/material";
 
-const roles = ['Market', 'Finance', 'Development'];
+const roles = ["Market", "Finance", "Development"];
 const randomRole = () => {
   return roles[Math.floor(Math.random() * roles.length)];
 };
 
 const fetchData = async () => {
   try {
-    const response = await axios.get('URL_API_ANDA');
+    const response = await axios.get("URL_API_ANDA");
     return response.data.map((item, index) => ({
       ...item,
       id: index + 1, // Atur id unik untuk setiap item
     }));
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
     return [];
   }
 };
 
-export default function FullFeaturedCrudGrid() {
+export default function Staff() {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
 
@@ -85,37 +85,37 @@ export default function FullFeaturedCrudGrid() {
   };
 
   const columns = [
-    { field: 'name', headerName: 'Name', width: 180, editable: true },
+    { field: "name", headerName: "Name", width: 180, editable: true },
     {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
+      field: "age",
+      headerName: "Age",
+      type: "number",
       width: 100,
-      align: 'left',
-      headerAlign: 'left',
+      align: "left",
+      headerAlign: "left",
       editable: true,
     },
     {
-      field: 'joinDate',
-      headerName: 'Join date',
-      type: 'date',
+      field: "joinDate",
+      headerName: "Join date",
+      type: "date",
       width: 180,
       editable: true,
     },
     {
-      field: 'role',
-      headerName: 'Department',
+      field: "role",
+      headerName: "Department",
       width: 220,
       editable: true,
-      type: 'singleSelect',
-      valueOptions: ['Market', 'Finance', 'Development'],
+      type: "singleSelect",
+      valueOptions: ["Market", "Finance", "Development"],
     },
     {
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Actions',
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
       width: 100,
-      cellClassName: 'actions',
+      cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
@@ -125,7 +125,7 @@ export default function FullFeaturedCrudGrid() {
               icon={<SaveIcon />}
               label="Save"
               sx={{
-                color: 'primary.main',
+                color: "primary.main",
               }}
               onClick={handleSaveClick(id)}
             />,
@@ -162,21 +162,22 @@ export default function FullFeaturedCrudGrid() {
     <Box
       sx={{
         marginTop: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
+        flexDirection: "column",
         height: 500,
-        width: '100%',
-        '& .actions': {
-          color: 'text.secondary',
+        width: "100%",
+        "& .actions": {
+          color: "text.secondary",
         },
-        '& .textPrimary': {
-          color: 'text.primary',
+        "& .textPrimary": {
+          color: "text.primary",
         },
-      }}
-    >
-    <Typography variant="h6" sx={{ textAlign: 'Left', marginBottom: '20px', marginTop: '20px' }}>
-      Staff
-    </Typography>
+      }}>
+      <Typography variant="h6" sx={{ textAlign: "Left", marginTop: "20px" }}>
+        Staff
+      </Typography>
       <DataGrid
         rows={rows}
         columns={columns}

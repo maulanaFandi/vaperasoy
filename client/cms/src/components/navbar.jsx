@@ -36,7 +36,7 @@ const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
-    position: "relative",
+    position: "fixed",
     whiteSpace: "nowrap",
     width: drawerWidth,
     transition: theme.transitions.create("width", {
@@ -65,7 +65,7 @@ export default function Navbar() {
   };
   return (
     <Box display="flex">
-      <NavBar position="absolute" open={open}>
+      <NavBar position="fixed" open={open}>
         <Toolbar>
           <IconButton
             edge="start"
