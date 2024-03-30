@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 const defaultTheme = createTheme();
@@ -22,6 +22,7 @@ export default function SignInSide() {
     email: "",
     password: "",
   });
+  const [googleButtonLoaded, setGoogleButtonLoaded] = useState(false);
 
   const handleChangeInput = (event) => {
     const { name, value } = event.target;
@@ -53,7 +54,7 @@ export default function SignInSide() {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function handleCredentialResponse(response) {
       const { data } = await axios.post(
         "http://localhost:3000/api/google-login",
@@ -65,21 +66,29 @@ export default function SignInSide() {
       Swal.fire({
         icon: "success",
         text: "Welcome Back !",
-      })
+      });
       navigate("/");
     }
 
-    window.onload = function () {
-      google.accounts.id.initialize({
-        client_id: "131557880670-6hfuu4eot6cqd1dkoboi8ro9cj2utr7n.apps.googleusercontent.com",
-        callback: handleCredentialResponse,
-      });
-      google.accounts.id.renderButton(document.getElementById("buttonDiv"), {
-        theme: "outline",
-        size: "large",
-      });
-    };
-  }, []);
+    if (!googleButtonLoaded) {
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.onload = () => {
+        google.accounts.id.initialize({
+          client_id:
+            "131557880670-6hfuu4eot6cqd1dkoboi8ro9cj2utr7n.apps.googleusercontent.com",
+          callback: handleCredentialResponse,
+        });
+        google.accounts.id.renderButton(document.getElementById("buttonDiv"), {
+          theme: "outline",
+          size: "large",
+        });
+        setGoogleButtonLoaded(true);
+      };
+      document.body.appendChild(script);
+    }
+  }, [googleButtonLoaded]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -163,7 +172,14 @@ export default function SignInSide() {
                 marginTop={2}>
                 Or Login with
               </Typography>
-              <div id="buttonDiv" style={{ marginTop: "10px", alignItems: "center", justifyContent: "center", display: "flex" }}></div>
+              <div
+                id="buttonDiv"
+                style={{
+                  marginTop: "10px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  display: "flex",
+                }}></div>
             </Box>
           </Box>
         </Grid>

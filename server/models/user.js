@@ -53,6 +53,21 @@ class UserModel {
 
     return user;
   }
+
+  static async findById(id) {
+    return await UserModel.getCollection().findOne({ _id: id });
+  }
+
+  static async updateById(id, args) {
+    return await UserModel.getCollection().updateOne(
+      { _id: id },
+      { $set: args }
+    );
+  }
+
+  static async deleteById(id) {
+    return await UserModel.getCollection().deleteOne({ _id: id });
+  }
 }
 
 module.exports = UserModel;

@@ -102,7 +102,7 @@ export default function Pricing() {
         }}
         sx={{
           width: '100%',
-          maxWidth: '350px', // Max width to prevent too much stretching
+          maxWidth: '500px', // Max width to prevent too much stretching
           marginX: 'auto', // Center the carousel
         }}
       >

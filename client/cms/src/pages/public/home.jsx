@@ -8,7 +8,7 @@ import CompanyCollection from '../../components/CompanyCollection';
 import Highlights from '../../components/Highlights';
 import Pricing from '../../components/Pricing';
 // import Features from './components/Features';
-// import Testimonials from './components/Testimonials';
+import Testimonials from '../../components/Testimonials';
 import Footer from '../../components/Footer';
 
 export default function LandingPage() {
@@ -19,14 +19,15 @@ export default function LandingPage() {
       <CssBaseline />
       <Hero />
       <Box sx={{ bgcolor: 'background.default' }}>
-        <CompanyCollection/>
+      <Divider />
+        <Pricing />
         {/* <Features /> */}
-        {/* <Divider /> */}
-        {/* <Testimonials /> */}
+        <Divider />
+        <CompanyCollection/>
         <Divider />
         <Highlights />
         <Divider />
-        <Pricing />
+        <Testimonials />
         <Divider />
         <Footer />
       </Box>

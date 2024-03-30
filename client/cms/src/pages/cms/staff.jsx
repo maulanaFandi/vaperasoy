@@ -176,7 +176,7 @@ export default function Staff() {
         },
       }}>
       <Typography variant="h6" sx={{ textAlign: "Left", marginTop: "20px" }}>
-        Staff
+        Staff List
       </Typography>
       <DataGrid
         rows={rows}
@@ -186,6 +186,15 @@ export default function Staff() {
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
+        sx={{
+          flexGrow: 1,
+          width: "70%",
+          marginBottom: "10px",
+          marginLeft: "250px",
+          marginRight: "auto",
+          alignText: "center",
+          alignContent: "center",
+        }}
       />
     </Box>
   );

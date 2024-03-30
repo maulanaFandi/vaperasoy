@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";
-
 import { DataGrid } from "@mui/x-data-grid";
-import { Typography } from "@mui/material";
+import { Typography, IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const fetchData = async () => {
   try {
     const response = await axios.get("http://localhost:3000/api/users");
-    return response.data.map((item, index) => ({
+    const userData = response.data.filter((item) => item.role !== "admin");
+    return userData.map((item, index) => ({
       ...item,
       id: index + 1, // Atur id unik untuk setiap item
       age: calculateAge(item.birthDate), // Hitung umur dari tanggal lahir
@@ -25,7 +26,10 @@ const calculateAge = (birthDate) => {
   const dob = new Date(birthDate);
   let age = today.getFullYear() - dob.getFullYear();
   const monthDiff = today.getMonth() - dob.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < dob.getDate())
+  ) {
     age--;
   }
   return age;
@@ -46,6 +50,11 @@ export default function ListUser() {
 
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
+  };
+
+  const handleDeleteUser = (id) => {
+    // Kode untuk menghapus user dengan ID tertentu
+    console.log("Delete user with ID:", id);
   };
 
   const columns = [
@@ -72,7 +81,25 @@ export default function ListUser() {
     },
     { field: "IDNumber", headerName: "NIK", width: 180 },
     { field: "address", headerName: "Address", width: 180 },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      width: 120,
+      cellClassName: "actions",
+      getActions: ({ id }) => [
+        <IconButton
+          key="delete"
+          aria-label="delete"
+          color="error"
+          onClick={() => handleDeleteUser(id)}
+        >
+          <DeleteIcon />
+        </IconButton>,
+      ],
+    },
   ];
+
   return (
     <Box
       sx={{
@@ -89,9 +116,10 @@ export default function ListUser() {
         "& .textPrimary": {
           color: "text.primary",
         },
-      }}>
+      }}
+    >
       <Typography variant="h6" sx={{ textAlign: "Left", marginTop: "20px" }}>
-        User
+        User List
       </Typography>
       <DataGrid
         rows={rows}
@@ -105,6 +133,7 @@ export default function ListUser() {
           marginLeft: "250px",
           marginRight: "auto",
           alignText: "center",
+          alignContent: "center",
         }}
       />
     </Box>

@@ -171,7 +171,7 @@ export default function Products() {
         },
       }}>
       <Typography variant="h6" sx={{ textAlign: "Left", marginTop: "20px" }}>
-        Products
+        Products List
       </Typography>
       <DataGrid
         rows={rows}
@@ -181,6 +181,15 @@ export default function Products() {
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
+        sx={{
+          flexGrow: 1,
+          width: "70%",
+          marginBottom: "10px",
+          marginLeft: "250px",
+          marginRight: "auto",
+          alignText: "center",
+          alignContent: "center",
+        }}
       />
     </Box>
   );
