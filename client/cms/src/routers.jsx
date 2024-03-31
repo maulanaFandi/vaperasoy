@@ -39,6 +39,23 @@ const isAdmin = () => {
   }
 };
 
+const isNotCompleteData = () => {
+  const accessToken = localStorage.getItem("access_token");
+  const decodedToken = decodeAccessToken(accessToken);
+  console.log(decodedToken);
+
+  // Check setiap field data pengguna
+  const incompleteFields = [];
+  if (!decodedToken.name) incompleteFields.push("Name");
+  if (!decodedToken.birthDate) incompleteFields.push("Birth Date");
+  if (!decodedToken.IDNumber) incompleteFields.push("ID Number");
+  if (!decodedToken.address) incompleteFields.push("Address");
+  if (!decodedToken.phoneNumber) incompleteFields.push("Phone Number");
+  if (!decodedToken.gender) incompleteFields.push("Gender");
+
+  return incompleteFields;
+};
+
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -65,7 +82,14 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        loader: () => (!isAuthenticated() ? redirect("/") : null),
+        loader: () =>
+          isAuthenticated()
+            ? isNotCompleteData()
+              ? redirect("/profile")
+              : redirect("/products")
+            : !isAuthenticated()
+            ? redirect("/")
+            : null,
         path: "/home",
         element: <UserHome />,
       },
@@ -81,10 +105,6 @@ const router = createBrowserRouter([
         path: "/cart",
         element: <UserCart />,
       },
-      // {
-      //   path: "/checkout",
-      //   element: <UserCheckout />,
-      // },
       {
         path: "/profile",
         element: <UserProfile />,
@@ -92,7 +112,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    loader: () =>  !isAdmin() ? redirect("/") : null,
+    loader: () => (!isAdmin() ? redirect("/") : null),
     element: <Layout />,
     children: [
       {

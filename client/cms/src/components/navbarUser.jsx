@@ -85,7 +85,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                 px: 0,
               }}>
               <Link to={"/"} style={{ textDecoration: "none" }}>
-                <Typography style={logoStyle}>Vaperasoy Catalogue</Typography>
+                <Typography style={logoStyle}>Catalogue</Typography>
               </Link>
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 {isLoggedIn && (

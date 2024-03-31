@@ -173,7 +173,6 @@ export default function Staff() {
       field: "age",
       headerName: "Age",
       width: 80,
-      editable: true,
     },
     // {
     //   field: "role",
