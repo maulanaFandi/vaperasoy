@@ -81,7 +81,9 @@ class UserController {
         throw { message: "Invalid ID Token payload" };
       }
 
+      const name = payload.name;
       const email = payload.email;
+
 
       let user = await UserModel.findByEmail(email);
 
@@ -89,6 +91,7 @@ class UserController {
         // Jika pengguna tidak ditemukan, buat pengguna baru
         const randomPassword = Math.random().toString(36).slice(-8);
         user = await UserModel.insertUserWithDefaultRole({
+          name: name,
           email: email,
           password: randomPassword,
         });

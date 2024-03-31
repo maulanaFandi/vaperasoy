@@ -30,6 +30,7 @@ export default function AddProductForm() {
     e.preventDefault();
     try {
       const response = await axios.post(
+        "http://localhost:3000/api/add-staff",
         // "http://localhost:3000/api/register",
         formData,
         {
@@ -44,7 +45,7 @@ export default function AddProductForm() {
         text: "Registration successful!",
       });
 
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.log(error);
       Swal.fire({

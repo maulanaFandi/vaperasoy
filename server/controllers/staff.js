@@ -1,4 +1,5 @@
 const StaffModel = require("../models/staff");
+const {ObjectId} = require('mongodb');
 
 class StaffController {
   static async createStaff(req, res, next) {
@@ -23,7 +24,8 @@ class StaffController {
 
   static async getStaffById(req, res, next) {
     try {
-      const result = await StaffModel.findById(req.params.id);
+      const id = req.params.id
+      const result = await StaffModel.findById(new ObjectId(id));
       res.status(200).json(result);
     } catch (error) {
       console.log(error);
@@ -33,7 +35,7 @@ class StaffController {
 
   static async updateStaff(req, res, next) {
     try {
-      const result = await StaffModel.updateById(req.params.id, req.body);
+      const result = await StaffModel.updateById(ObjectId(req.params.id), req.body);
       res.status(200).json(result);
     } catch (error) {
       console.log(error);
@@ -43,7 +45,8 @@ class StaffController {
 
   static async deleteStaff(req, res, next) {
     try {
-      const result = await StaffModel.deleteById(req.params.id);
+      const id = req.params.id
+      const result = await StaffModel.deleteById(id);
       res.status(200).json(result);
     } catch (error) {
       console.log(error);

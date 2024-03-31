@@ -54,7 +54,7 @@ const router = createBrowserRouter([
       isAuthenticated()
         ? isAdmin()
           ? redirect("/cms/dashboard")
-          : redirect("/home")
+          : redirect("/products")
         : redirect("/public"),
   },
   {

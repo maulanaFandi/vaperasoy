@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { db } = require("../config/database");
 
 class StaffModel {
@@ -15,12 +16,19 @@ class StaffModel {
     });
   }
 
+  static async updateById(_id, args) {
+    return await StaffModel.getCollection().updateOne(
+      { _id: _id },
+      { $set: args }
+    );
+  }
+
   static async findById(id) {
     return await StaffModel.getCollection().findOne({ _id: id });
   }
 
-  static async deleteById(id) {
-    return await StaffModel.getCollection().deleteOne({ _id: id });
+  static deleteById(id) {
+    return StaffModel.getCollection().deleteOne({_id: new ObjectId(id)});
   }
 }
 

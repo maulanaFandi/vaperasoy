@@ -5,31 +5,13 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Typography, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const fetchData = async () => {
-  try {
-    const response = await axios.get("http://localhost:3000/api/users");
-    const userData = response.data.filter((item) => item.role !== "admin");
-    return userData.map((item, index) => ({
-      ...item,
-      id: index + 1, // Atur id unik untuk setiap item
-      age: calculateAge(item.birthDate), // Hitung umur dari tanggal lahir
-    }));
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return [];
-  }
-};
-
 // Fungsi untuk menghitung umur dari tanggal lahir
 const calculateAge = (birthDate) => {
   const today = new Date();
   const dob = new Date(birthDate);
   let age = today.getFullYear() - dob.getFullYear();
   const monthDiff = today.getMonth() - dob.getMonth();
-  if (
-    monthDiff < 0 ||
-    (monthDiff === 0 && today.getDate() < dob.getDate())
-  ) {
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
     age--;
   }
   return age;
@@ -40,12 +22,27 @@ export default function ListUser() {
   const [rowModesModel, setRowModesModel] = useState({});
 
   useEffect(() => {
-    const fetchDataFromAPI = async () => {
-      const newData = await fetchData();
-      setRows(newData);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/users");
+        const userData = response.data.filter((item) => item.role !== "admin");
+        setRows(
+          userData.map((row) => ({
+            ...row,
+            id: row._id,
+            age: !isNaN(calculateAge(row.birthDate))
+              ? calculateAge(row.birthDate)
+              : "", // Hitung umur dari tanggal lahir
+            isNew: false,
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        return [];
+      }
     };
 
-    fetchDataFromAPI();
+    fetchData();
   }, []);
 
   const handleRowModesModelChange = (newRowModesModel) => {
@@ -92,8 +89,7 @@ export default function ListUser() {
           key="delete"
           aria-label="delete"
           color="error"
-          onClick={() => handleDeleteUser(id)}
-        >
+          onClick={() => handleDeleteUser(id)}>
           <DeleteIcon />
         </IconButton>,
       ],
@@ -116,8 +112,7 @@ export default function ListUser() {
         "& .textPrimary": {
           color: "text.primary",
         },
-      }}
-    >
+      }}>
       <Typography variant="h6" sx={{ textAlign: "Left", marginTop: "20px" }}>
         User List
       </Typography>

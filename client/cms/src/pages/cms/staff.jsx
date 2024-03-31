@@ -12,36 +12,25 @@ import {
   GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
-
-const roles = ["Market", "Finance", "Development"];
-const randomRole = () => {
-  return roles[Math.floor(Math.random() * roles.length)];
-};
-
-const fetchData = async () => {
-  try {
-    const response = await axios.get("URL_API_ANDA");
-    return response.data.map((item, index) => ({
-      ...item,
-      id: index + 1, // Atur id unik untuk setiap item
-    }));
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return [];
-  }
-};
+import Swal from "sweetalert2";
 
 export default function Staff() {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
 
   useEffect(() => {
-    const fetchDataFromAPI = async () => {
-      const newData = await fetchData();
-      setRows(newData);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/staff");
+        setRows(
+          response.data.map((row) => ({ ...row, id: row._id, isNew: false }))
+        );
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        return [];
+      }
     };
-
-    fetchDataFromAPI();
+    fetchData();
   }, []);
 
   const handleRowEditStop = (params, event) => {
@@ -59,7 +48,38 @@ export default function Staff() {
   };
 
   const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
+    const row = rows.find((row) => row.id === id);
+    if (!row) {
+      return;
+    }
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to delete the staff member with ID ${id}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`http://localhost:3000/api/staff/${id}`);
+        setRows(rows.filter((row) => row.id !== id));
+        Swal.fire({
+          title: "Deleted!",
+          text: `The staff member with ID ${id} has been deleted.`,
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      } else {
+        Swal.fire({
+          title: "Cancelled",
+          text: `The staff member with ID ${id} was not deleted.`,
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    });
   };
 
   const handleCancelClick = (id) => () => {
