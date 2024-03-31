@@ -1,5 +1,6 @@
 const { db } = require("../config/database");
 const { generate } = require("../helpers/bcrypt");
+const {ObjectId} = require('mongodb');
 
 class UserModel {
   static getCollection() {
@@ -55,18 +56,18 @@ class UserModel {
   }
 
   static async findById(id) {
-    return await UserModel.getCollection().findOne({ _id: id });
+    return await UserModel.getCollection().findOne({ _id: new ObjectId(id) });
   }
 
   static async updateById(id, args) {
     return await UserModel.getCollection().updateOne(
-      { _id: id },
+      { _id: new ObjectId(id) },
       { $set: args }
     );
   }
 
   static async deleteById(id) {
-    return await UserModel.getCollection().deleteOne({ _id: id });
+    return await UserModel.getCollection().deleteOne({ _id: new ObjectId(id) });
   }
 }
 

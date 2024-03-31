@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { Typography, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Swal from "sweetalert2";
 
 // Fungsi untuk menghitung umur dari tanggal lahir
 const calculateAge = (birthDate) => {
@@ -50,8 +51,38 @@ export default function ListUser() {
   };
 
   const handleDeleteUser = (id) => {
-    // Kode untuk menghapus user dengan ID tertentu
-    console.log("Delete user with ID:", id);
+    const row = rows.find((row) => row.id === id);
+    if (!row) {
+      return;
+    }
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to delete the member with NIK ${row.IDNumber}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`http://localhost:3000/api/users/${id}`);
+        setRows(rows.filter((row) => row.id !== id));
+        Swal.fire({
+          title: "Deleted!",
+          text: `The member with NIK ${row.IDNumber} has been deleted.`,
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      } else {
+        Swal.fire({
+          title: "Cancelled",
+          text: `The member with NIK ${row.IDNumber} was not deleted.`,
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    });
   };
 
   const columns = [

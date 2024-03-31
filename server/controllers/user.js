@@ -84,7 +84,6 @@ class UserController {
       const name = payload.name;
       const email = payload.email;
 
-
       let user = await UserModel.findByEmail(email);
 
       if (!user) {
@@ -110,6 +109,38 @@ class UserController {
     try {
       const users = await UserModel.getAllUsers();
       res.status(200).json(users);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  static async getUserById(req, res, next) {
+    try {
+      const id = req.params.id;
+      const result = await UserModel.findById(id);
+      res.status(200).json(result);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  static async updateUser(req, res, next) {
+    try {
+      const id = req.params.id;
+      const result = await UserModel.updateById(id, req.body);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  static async deleteUser(req, res, next) {
+    try {
+      const id = req.params.id;
+      const result = await UserModel.deleteById(id);
+      res.status(200).json(result);
     } catch (error) {
       console.log(error);
       next(error);

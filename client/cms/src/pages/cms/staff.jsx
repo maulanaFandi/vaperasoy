@@ -11,7 +11,7 @@ import {
   GridActionsCellItem,
   GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import Swal from "sweetalert2";
 
 export default function Staff() {
@@ -105,14 +105,21 @@ export default function Staff() {
   };
 
   const columns = [
-    { field: "name", headerName: "Name", width: 180, editable: true },
+    { field: "id", headerName: "ID", width: 200 },
+    {
+      field: "name",
+      headerName: "Name",
+      width: 180,
+      align: "center",
+      editable: true,
+    },
     {
       field: "age",
       headerName: "Age",
       type: "number",
       width: 100,
-      align: "left",
-      headerAlign: "left",
+      align: "center",
+      headerAlign: "center",
       editable: true,
     },
     {
@@ -134,7 +141,9 @@ export default function Staff() {
       field: "actions",
       type: "actions",
       headerName: "Actions",
-      width: 100,
+      width: 200,
+      headerAlign: "center",
+      align: "center",
       cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -160,18 +169,18 @@ export default function Staff() {
         }
 
         return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
+          <Button
+            key="edit"
             onClick={handleEditClick(id)}
-            color="inherit"
-          />,
+            variant="contained"
+            sx={{ mr: 1 }}>
+            View Detail
+          </Button>,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteClick(id)}
-            color="inherit"
+            color="error"
           />,
         ];
       },
