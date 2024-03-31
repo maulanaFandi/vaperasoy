@@ -32,15 +32,15 @@ export default function ListUser() {
             ...row,
             id: row._id,
             age: !isNaN(calculateAge(row.birthDate))
-              ? calculateAge(row.birthDate)
-              : "", // Hitung umur dari tanggal lahir
+            ? calculateAge(row.birthDate)
+            : "", // Hitung umur dari tanggal lahir
             isNew: false,
           }))
-        );
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        return [];
-      }
+          );
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          return [];
+        }
     };
 
     fetchData();
@@ -92,8 +92,8 @@ export default function ListUser() {
       field: "age", // Ubah field dari 'birthDate' menjadi 'age'
       headerName: "Age",
       width: 100,
-      align: "left",
-      headerAlign: "left",
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "phoneNumber",

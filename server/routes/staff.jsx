@@ -8,7 +8,7 @@ router.get("/staff", StaffController.getAllStaff);
 
 router.get("/staff/:id", StaffController.getStaffById);
 
-router.put("/staff/:id", StaffController.updateStaff);
+router.patch("/staff/:id", StaffController.updateStaff);
 
 router.delete("/staff/:id", StaffController.deleteStaff);
 

@@ -16,19 +16,19 @@ class StaffModel {
     });
   }
 
-  static async updateById(_id, args) {
+  static async updateById(id, updateData) {
     return await StaffModel.getCollection().updateOne(
-      { _id: _id },
-      { $set: args }
+      { _id: new ObjectId(id) },
+      { $set: updateData }
     );
   }
 
   static async findById(id) {
-    return await StaffModel.getCollection().findOne({ _id: id });
+    return await StaffModel.getCollection().findOne({ _id: new ObjectId(id) });
   }
 
   static deleteById(id) {
-    return StaffModel.getCollection().deleteOne({_id: new ObjectId(id)});
+    return StaffModel.getCollection().deleteOne({ _id: new ObjectId(id) });
   }
 }
 

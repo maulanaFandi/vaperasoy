@@ -14,6 +14,17 @@ import {
 import { Button, Typography } from "@mui/material";
 import Swal from "sweetalert2";
 
+const calculateAge = (birthDate) => {
+  const today = new Date();
+  const dob = new Date(birthDate);
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+  return age;
+};
+
 export default function Staff() {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
@@ -22,8 +33,17 @@ export default function Staff() {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/staff");
+        console.log(response.data);
         setRows(
-          response.data.map((row) => ({ ...row, id: row._id, isNew: false }))
+          response.data.map((row) => ({
+            ...row,
+            id: row._id,
+            age: !isNaN(calculateAge(row.birthDate))
+              ? calculateAge(row.birthDate)
+              : "",
+            birthDate: Date.parse(row.birthDate) ? new Date(row.birthDate) : "",
+            isNew: false,
+          }))
         );
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -43,8 +63,35 @@ export default function Staff() {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
-  const handleSaveClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+  const handleSaveClick = (id) => async () => {
+    try {
+      const updatedRow = rows.find((row) => row.id === id);
+      const { _id, ...updateDataWithoutId } = updatedRow;
+      console.log("Updated row:", updatedRow);
+      console.log("Update data without id:", updateDataWithoutId);
+      const result = await axios.patch(
+        `http://localhost:3000/api/staff/${_id}`,
+        updateDataWithoutId
+      );
+      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+      setRows(
+        rows.map((row) => (row.id === id ? { ...row, ...result.data } : row))
+      );
+      Swal.fire({
+        title: "Success",
+        text: "Data has been updated.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    } catch (error) {
+      console.error("Error updating data:", error);
+      Swal.fire({
+        title: "Error",
+        text: "Failed to save data. Please try again later.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
   };
 
   const handleDeleteClick = (id) => () => {
@@ -105,38 +152,37 @@ export default function Staff() {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 200 },
+    { field: "_id", headerName: "ID", width: 200 },
     {
       field: "name",
       headerName: "Name",
       width: 180,
-      align: "center",
+      align: "left",
       editable: true,
     },
     {
-      field: "age",
-      headerName: "Age",
-      type: "number",
+      field: "birthDate",
+      headerName: "Birth Date",
+      type: "date",
       width: 100,
       align: "center",
       headerAlign: "center",
       editable: true,
     },
     {
-      field: "joinDate",
-      headerName: "Join date",
-      type: "date",
-      width: 180,
+      field: "age",
+      headerName: "Age",
+      width: 80,
       editable: true,
     },
-    {
-      field: "role",
-      headerName: "Department",
-      width: 220,
-      editable: true,
-      type: "singleSelect",
-      valueOptions: ["Market", "Finance", "Development"],
-    },
+    // {
+    //   field: "role",
+    //   headerName: "Department",
+    //   width: 220,
+    //   editable: true,
+    //   type: "singleSelect",
+    //   valueOptions: ["Market", "Finance", "Development"],
+    // },
     {
       field: "actions",
       type: "actions",
@@ -171,11 +217,11 @@ export default function Staff() {
         return [
           <Button
             key="edit"
+            color="primary"
+            size="small"
+            startIcon={<EditIcon />}
             onClick={handleEditClick(id)}
-            variant="contained"
-            sx={{ mr: 1 }}>
-            View Detail
-          </Button>,
+            sx={{ mr: 1 }}></Button>,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
