@@ -57,12 +57,7 @@ export default function LandingPage() {
         <Divider />
         <Footer />
         <Dialog open={openModal} onClick={handleBackdropClick}>
-          <Paper
-            sx={{
-              backgroundImage:
-                "url(https://img1.picmix.com/output/stamp/normal/3/5/6/2/1032653_847ec.gif)",
-              backgroundSize: "cover",
-            }}>
+          <Paper>
             <DialogTitle>Confirmation</DialogTitle>
             <DialogContent>
               <img
@@ -86,8 +81,6 @@ export default function LandingPage() {
                   marginBottom: "10px",
                   fontSize: "30px",
                   fontWeight: "bold",
-                  textAlign: "center",
-                  color: "white",
                 }}>
                 Are You Over 18 Years Old?
               </p>

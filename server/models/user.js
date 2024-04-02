@@ -27,10 +27,12 @@ class UserModel {
   static async insertUserWithDefaultRole(user) {
     const { password, ...userData } = user;
     const defaultUserRole = "user";
+    const imageUrl = "https://cdn-icons-png.flaticon.com/512/266/266033.png";
     const defaultUser = {
       ...userData,
       password: generate(password),
       role: defaultUserRole,
+      imgUrl: imageUrl,
     };
     return await UserModel.getCollection().insertOne(defaultUser);
   }

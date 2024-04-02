@@ -146,6 +146,23 @@ class UserController {
       next(error);
     }
   }
+
+  static async getProfile(req, res, next) {
+    try {
+      const userEmail = req.user.email;
+
+      const userProfile = await UserModel.findByEmail(userEmail);
+
+      if (!userProfile) {
+        return res.status(404).json({ message: "User profile not found" });
+      }
+
+      res.status(200).json(userProfile);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
 }
 
 module.exports = UserController;

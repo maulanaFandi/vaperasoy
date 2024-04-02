@@ -39,6 +39,7 @@ export default function SignInSide() {
         password: loginInput.password,
       });
       localStorage.setItem("access_token", data.data.access_token);
+      console.log(data.data.access_token);
       Swal.fire({
         icon: "success",
         title: "Success",

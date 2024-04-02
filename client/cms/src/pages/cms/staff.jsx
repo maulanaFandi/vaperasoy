@@ -25,6 +25,13 @@ const calculateAge = (birthDate) => {
   return age;
 };
 
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+  }).format(amount);
+};
+
 export default function Staff() {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
@@ -42,6 +49,7 @@ export default function Staff() {
               ? calculateAge(row.birthDate)
               : "",
             birthDate: Date.parse(row.birthDate) ? new Date(row.birthDate) : "",
+            salary: formatCurrency(row.salary),
             isNew: false,
           }))
         );
@@ -161,6 +169,13 @@ export default function Staff() {
       editable: true,
     },
     {
+      field: "email",
+      headerName: "Email",
+      width: 180,
+      align: "left",
+      editable: true,
+    },
+    {
       field: "birthDate",
       headerName: "Birth Date",
       type: "date",
@@ -174,14 +189,18 @@ export default function Staff() {
       headerName: "Age",
       width: 80,
     },
-    // {
-    //   field: "role",
-    //   headerName: "Department",
-    //   width: 220,
-    //   editable: true,
-    //   type: "singleSelect",
-    //   valueOptions: ["Market", "Finance", "Development"],
-    // },
+    {
+      field: "salary",
+      headerName: "Salary",
+      width: 100,
+      editable: true,
+    },
+    {
+      field: "IDNumber",
+      headerName: "NIK",
+      width: 100,
+      editable: true,
+    },
     {
       field: "actions",
       type: "actions",

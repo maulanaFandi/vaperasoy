@@ -16,7 +16,6 @@ import Register from "./pages/register.jsx";
 
 // USER
 import Home from "./pages/public/home.jsx";
-import UserHome from "./pages/public/userHome.jsx";
 import UserProducts from "./pages/public/userProducts.jsx";
 import UserDetailProducts from "./pages/public/userDetailProduct.jsx";
 import UserProfile from "./pages/public/userProfile.jsx";
@@ -37,23 +36,6 @@ const isAdmin = () => {
   } else {
     return false;
   }
-};
-
-const isNotCompleteData = () => {
-  const accessToken = localStorage.getItem("access_token");
-  const decodedToken = decodeAccessToken(accessToken);
-  console.log(decodedToken);
-
-  // Check setiap field data pengguna
-  const incompleteFields = [];
-  if (!decodedToken.name) incompleteFields.push("Name");
-  if (!decodedToken.birthDate) incompleteFields.push("Birth Date");
-  if (!decodedToken.IDNumber) incompleteFields.push("ID Number");
-  if (!decodedToken.address) incompleteFields.push("Address");
-  if (!decodedToken.phoneNumber) incompleteFields.push("Phone Number");
-  if (!decodedToken.gender) incompleteFields.push("Gender");
-
-  return incompleteFields;
 };
 
 const router = createBrowserRouter([
@@ -80,18 +62,6 @@ const router = createBrowserRouter([
       {
         path: "/public",
         element: <Home />,
-      },
-      {
-        loader: () =>
-          isAuthenticated()
-            ? isNotCompleteData()
-              ? redirect("/profile")
-              : redirect("/products")
-            : !isAuthenticated()
-            ? redirect("/")
-            : null,
-        path: "/home",
-        element: <UserHome />,
       },
       {
         path: "/products",

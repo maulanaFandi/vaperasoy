@@ -25,7 +25,11 @@ export default function ListUser() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/users");
+        const response = await axios.get("http://localhost:3000/api/users", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
         const userData = response.data.filter((item) => item.role !== "admin");
         setRows(
           userData.map((row) => ({

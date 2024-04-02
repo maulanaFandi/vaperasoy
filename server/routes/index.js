@@ -5,19 +5,22 @@ const user = require('./users.jsx');
 const staff = require('./staff.jsx');
 const product = require('./products.jsx');
 const UserController = require('../controllers/user.js');
-
-router.use('/admin', admin);
-
-router.use(user)
-
-router.use(staff)
-
-// router.use(product)
+const auth = require('../middlewares/auth.js');
 
 router.post('/login', UserController.login);
 
 router.post('/register', UserController.register);
 
 router.post('/google-login', UserController.googleLogin);
+
+router.use('/admin', admin);
+
+router.use(staff)
+
+router.use(auth)
+
+router.use(user)
+
+// router.use(product)
 
 module.exports = router

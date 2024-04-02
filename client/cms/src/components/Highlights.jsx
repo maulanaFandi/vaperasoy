@@ -5,49 +5,47 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import AutoFixHighRoundedIcon from "@mui/icons-material/AutoFixHighRounded";
 import ConstructionRoundedIcon from "@mui/icons-material/ConstructionRounded";
-import QueryStatsRoundedIcon from "@mui/icons-material/QueryStatsRounded";
-import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
-import SupportAgentRoundedIcon from "@mui/icons-material/SupportAgentRounded";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import LoyaltyIcon from '@mui/icons-material/Loyalty';
 
 const items = [
   {
-    icon: <SettingsSuggestRoundedIcon />,
-    title: "Adaptable performance",
+    icon: <LoyaltyIcon />,
+    title: "Sales of E-Cigarettes and Accessories",
     description:
-      "Our product effortlessly adjusts to your needs, boosting efficiency and simplifying your tasks.",
+      "Provide a variety of e-cigarettes and related accessories, such as pods, coils, batteries, chargers and casings.",
   },
   {
     icon: <ConstructionRoundedIcon />,
-    title: "Built to last",
+    title: "Repair and Maintenance",
     description:
-      "Experience unmatched durability that goes above and beyond with lasting investment.",
+      "We can also offer repair and maintenance services for vape devices. This includes cleaning, replacing damaged components, or general repairs on devices such as mods and tanks.",
   },
   {
     icon: <ThumbUpAltRoundedIcon />,
-    title: "Great user experience",
+    title: "Product Consultations and Explanations",
     description:
-      "Integrate our product into your routine with an intuitive and easy-to-use interface.",
+      "Our staff are usually trained to provide consultations to customers about the products they offer. They can provide information about different types of vape devices, e-liquids, and how to use them.",
   },
   {
-    icon: <AutoFixHighRoundedIcon />,
-    title: "Innovative functionality",
+    icon: <LocalShippingIcon />,
+    title: "Delivery and Pickup Services",
     description:
-      "Stay ahead with features that set new standards, addressing your evolving needs better than the rest.",
+      "We may offer delivery services for customers who wish to order products online or over the phone. Additionally, they can also offer in-store pickup services, where customers can order online and then pick up their order at the store location without having to wait long.",
   },
   {
-    icon: <SupportAgentRoundedIcon />,
-    title: "Reliable support",
+    icon: <LocalOfferIcon />,
+    title: "Alternative Products at Lower Prices",
     description:
-      "Count on our responsive customer support, offering assistance that goes beyond the purchase.",
+      "In addition to providing premium products, we can also offer more affordable product options for customers on a limited budget. This can be a generic brand of e-liquid or a vape device with basic features but still high quality.",
   },
   {
-    icon: <QueryStatsRoundedIcon />,
-    title: "Precision in every detail",
-    description:
-      "Enjoy a meticulously crafted product where small touches make a significant impact on your overall experience.",
+    icon: <ConstructionRoundedIcon />,
+    title: "Device Testing Services",
+    description: "We may offer device testing services to ensure that customers' vape devices are functioning properly and comply with safety standards. This can include testing the battery, electrical output, and other functions.",
   },
 ];
 
