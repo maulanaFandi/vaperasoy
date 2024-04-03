@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const admin = require('./admin');
-const user = require('./users.jsx');
-const staff = require('./staff.jsx');
-const product = require('./products.jsx');
+const user = require('./users.js');
+const staff = require('./staff.js');
+const product = require('./products.js');
 const UserController = require('../controllers/user.js');
 const auth = require('../middlewares/auth.js');
 
@@ -21,6 +21,6 @@ router.use(auth)
 
 router.use(user)
 
-// router.use(product)
+router.use(product)
 
 module.exports = router
