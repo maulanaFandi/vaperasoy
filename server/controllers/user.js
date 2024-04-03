@@ -18,8 +18,36 @@ class UserController {
         address,
       } = req.body;
 
-      if (!name || !email || !password) {
-        throw { name: "NotEmpty" };
+      if (!name) {
+        throw { name: "NameNotEmpty" };
+      }
+
+      if (!email) {
+        throw { name: "EmailNotEmpty" };
+      }
+
+      if (!password) {
+        throw { name: "PasswordNotEmpty" };
+      }
+
+      if (!birthDate) {
+        throw { name: "DateNotEmpty" };
+      }
+
+      if (!phoneNumber) {
+        throw { name: "PhoneNotEmpty" };
+      }
+
+      if (!gender) {
+        throw { name: "GenderNotEmpty" };
+      }
+
+      if (!IDNumber) {
+        throw { name: "IDNotEmpty" };
+      }
+
+      if (!address) {
+        throw { name: "AddressNotEmpty" };
       }
 
       const newUser = {
@@ -46,8 +74,12 @@ class UserController {
     try {
       const { email, password } = req.body;
 
-      if (!email || !password) {
-        throw { name: "NotEmpty" };
+      if (!email) {
+        throw { name: "EmailNotEmpty" };
+      }
+
+      if (!password) {
+        throw { name: "PasswordNotEmpty" };
       }
 
       const user = await UserModel.findByEmail(email);

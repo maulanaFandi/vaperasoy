@@ -4,8 +4,32 @@ const errHandle = (err, req, res, next) => {
     case "SequelizeUniqueConstraintError":
       res.status(400).json({ message: err.errors[0].message });
       break;
-    case "NotEmpty":
+    case "EmailNotEmpty":
       res.status(400).json({ message: "Email or Password Is Required" });
+      break;
+    case "PasswordNotEmpty":
+      res.status(400).json({ message: "Password Is Required" });
+      break;
+    case "NameNotEmpty":
+      res.status(400).json({ message: "Name Is Required" });
+      break;
+    case "BirthDateNotEmpty":
+      res.status(400).json({ message: "Date Is Required" });
+      break;
+    case "PhoneNotEmpty":
+      res.status(400).json({ message: "Phone Is Required" });
+      break;
+    case "GenderNotEmpty":
+      res.status(400).json({ message: "Gender Is Required" });
+      break;
+    case "IDNotEmpty":
+      res.status(400).json({ message: "NIK Is Required" });
+      break;
+    case "SalaryNotEmpty":
+      res.status(400).json({ message: "Salary Is Required" });
+      break;
+    case "AddressNotEmpty":
+      res.status(400).json({ message: "Address Is Required" });
       break;
     case "InvalidLogin":
       res.status(401).json({ message: "Wrong Email/Password" });

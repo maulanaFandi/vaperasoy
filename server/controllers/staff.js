@@ -4,7 +4,55 @@ const { ObjectId } = require("mongodb");
 class StaffController {
   static async createStaff(req, res, next) {
     try {
-      const result = await StaffModel.create(req.body);
+      const {
+        name,
+        email,
+        birthDate,
+        phoneNumber,
+        gender,
+        IDNumber,
+        salary,
+        address,
+      } = req.body;
+
+      if (!name) {
+        throw { name: "NameNotEmpty" };
+      }
+
+      if (!email) {
+        throw { name: "EmailNotEmpty" };
+      }
+
+      if (!birthDate) {
+        throw { name: "DateNotEmpty" };
+      }
+
+      if (!phoneNumber) {
+        throw { name: "PhoneNotEmpty" };
+      }
+
+      if (!gender) {
+        throw { name: "GenderNotEmpty" };
+      }
+
+      if (!IDNumber) {
+        throw { name: "IDNotEmpty" };
+      }
+
+      if (!salary) {
+        throw { name: "SalaryNotEmpty" };
+      }
+
+      const result = await StaffModel.create({
+        name,
+        email,
+        birthDate,
+        phoneNumber,
+        gender,
+        IDNumber,
+        salary,
+        address,
+      });
       res.status(201).json(result);
     } catch (error) {
       console.log(error);

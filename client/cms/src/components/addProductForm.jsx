@@ -1,16 +1,25 @@
 import React, { useState } from "react";
-import axios from "axios"; 
-import Swal from "sweetalert2"; 
+import axios from "axios";
+import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
-import { TextField, Button, Typography, Select, MenuItem, FormControl, InputLabel, TextareaAutosize, Grid, Paper } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  TextareaAutosize,
+  Grid,
+  Paper,
+} from "@mui/material";
 
 export default function AddProductForm() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: "",
-    passwordConfirm: "",
     birthDate: "",
     phoneNumber: "",
     gender: "",
@@ -30,21 +39,20 @@ export default function AddProductForm() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        // "http://localhost:3000/api/register",
+        "http://localhost:3000/api/products",
         formData,
         {
           headers: {
-            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
         }
       );
-
       Swal.fire({
         icon: "success",
-        text: "Registration successful!",
+        text: "Add Product successful!",
       });
 
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.log(error);
       Swal.fire({
@@ -58,7 +66,13 @@ export default function AddProductForm() {
     <Grid container spacing={3} justifyContent="center" alignItems="center">
       <Grid item xs={12} md={6}>
         <Paper elevation={3} style={{ padding: 20 }}>
-          <Typography variant="h4" gutterBottom align="center" fontWeight="bold">Add Product</Typography>
+          <Typography
+            variant="h4"
+            gutterBottom
+            align="center"
+            fontWeight="bold">
+            Add Product
+          </Typography>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -143,8 +157,7 @@ export default function AddProductForm() {
                     onChange={handleChange}
                     label="Gender"
                     variant="outlined"
-                    fullWidth
-                  >
+                    fullWidth>
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
@@ -172,7 +185,7 @@ export default function AddProductForm() {
                   value={formData.address}
                   onChange={handleChange}
                   placeholder="Address"
-                  style={{ width: '100%', minHeight: 100 }}
+                  style={{ width: "100%", minHeight: 100 }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -180,8 +193,7 @@ export default function AddProductForm() {
                   type="submit"
                   variant="contained"
                   color="primary"
-                  fullWidth
-                >
+                  fullWidth>
                   Register
                 </Button>
               </Grid>

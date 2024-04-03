@@ -15,7 +15,7 @@ import {
   Paper,
 } from "@mui/material";
 
-export default function AddProductForm() {
+export default function AddStaffForm() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -40,7 +40,7 @@ export default function AddProductForm() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/add-staff",
+        "http://localhost:3000/api/staff",
         formData,
         {
           headers: {
@@ -87,7 +87,6 @@ export default function AddProductForm() {
                   label="Name"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -100,7 +99,6 @@ export default function AddProductForm() {
                   label="Email"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -112,7 +110,6 @@ export default function AddProductForm() {
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -125,7 +122,6 @@ export default function AddProductForm() {
                   label="Phone Number"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -140,7 +136,7 @@ export default function AddProductForm() {
                     label="Gender"
                     variant="outlined"
                     fullWidth
-                    required>
+>
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
@@ -159,7 +155,6 @@ export default function AddProductForm() {
                   label="NIK"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -172,7 +167,6 @@ export default function AddProductForm() {
                   label="Salary"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -183,7 +177,6 @@ export default function AddProductForm() {
                   onChange={handleChange}
                   placeholder="Address"
                   style={{ width: "100%", minHeight: 100 }}
-                  required
                 />
               </Grid>
               <Grid item xs={12}>

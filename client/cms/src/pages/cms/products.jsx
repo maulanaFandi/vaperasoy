@@ -15,10 +15,14 @@ import { Typography } from "@mui/material";
 
 const fetchData = async () => {
   try {
-    const response = await axios.get("URL_API_ANDA");
-    return response.data.map((item, index) => ({
+    const response = await axios.get("http://localhost:3000/api/products", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+    return response.data.map((item) => ({
       ...item,
-      id: index + 1, // Atur id unik untuk setiap item
+      id: item._id,
     }));
   } catch (error) {
     console.error("Error fetching data:", error);

@@ -37,7 +37,7 @@ export default function ListUser() {
             id: row._id,
             age: !isNaN(calculateAge(row.birthDate))
             ? calculateAge(row.birthDate)
-            : "", // Hitung umur dari tanggal lahir
+            : "",
             isNew: false,
           }))
           );
