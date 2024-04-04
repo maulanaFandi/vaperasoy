@@ -20,7 +20,6 @@ const calculateAge = (birthDate) => {
 
 export default function ListUser() {
   const [rows, setRows] = useState([]);
-  const [rowModesModel, setRowModesModel] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,10 +48,6 @@ export default function ListUser() {
 
     fetchData();
   }, []);
-
-  const handleRowModesModelChange = (newRowModesModel) => {
-    setRowModesModel(newRowModesModel);
-  };
 
   const handleDeleteUser = (id) => {
     const row = rows.find((row) => row.id === id);
@@ -158,8 +153,6 @@ export default function ListUser() {
       <DataGrid
         rows={rows}
         columns={columns}
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
         sx={{
           flexGrow: 1,
           width: "70%",

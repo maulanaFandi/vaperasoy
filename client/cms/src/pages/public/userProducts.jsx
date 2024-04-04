@@ -47,7 +47,7 @@ const isNotCompleteData = () => {
 
 export default function UserProducts() {
   const defaultTheme = createTheme();
-  const [Data, setData] = useState(null);
+  const [Data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false); // Menampilkan modal jika ada bidang yang tidak lengkap
   const [incompleteFields, setIncompleteFields] = useState([]); // Daftar bidang yang tidak lengkap
   const [formData, setFormData] = useState({

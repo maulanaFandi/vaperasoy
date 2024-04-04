@@ -19,7 +19,7 @@ const formatAge = (birthDate) => {
 };
 
 const UserProfile = () => {
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

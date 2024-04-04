@@ -52,32 +52,67 @@ export default function Products() {
 
   const handleSaveClick = (id) => async () => {
     try {
-      const { _id, ...updateDataWithoutId } = rows.find((row) => row.id === id);
-      // Update data on the server
-      await axios.patch(
-        `http://localhost:3000/api/products/${_id}`,
-        updateDataWithoutId,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: `Save Editing With ID ${id}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Save it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      });
+      if (result.isConfirmed) {
+        const updatedRow = rows.find((row) => row.id === id);
+        if (updatedRow) {
+          await processRowUpdate(updatedRow);
+          Swal.fire({
+            title: "Success",
+            text: "Data has been updated.",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          setRowModesModel((prevModesModel) => ({
+            ...prevModesModel,
+            [id]: { mode: GridRowModes.View },
+          }));
+        } else {
+          console.error("Row with ID", id, "not found.");
+          // Handle the case when row with given ID is not found
         }
-      );
+      } else {
+        Swal.fire({
+          title: "Cancelled",
+          text: `Data with ID ${id} was not Saved.`,
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+      // const { _id, ...updateDataWithoutId } = rows.find((row) => row.id === id);
+      // // Update data on the server
+      // await axios.patch(
+      //   `http://localhost:3000/api/products/${_id}`,
+      //   updateDataWithoutId,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      //     },
+      //   }
+      // );
 
       // Update row mode
-      setRowModesModel({
-        ...rowModesModel,
-        [_id]: { mode: GridRowModes.View },
-      });
-      console.log(rowModesModel);
+      // setRowModesModel({
+      //   ...rowModesModel,
+      //   [_id]: { mode: GridRowModes.View },
+      // });
+      // console.log(rowModesModel);
 
-      // Show success message
-      Swal.fire({
-        title: "Saved!",
-        text: `Product with ID ${id} has been updated.`,
-        icon: "success",
-        confirmButtonText: "OK",
-      });
+      // // Show success message
+      // Swal.fire({
+      //   title: "Saved!",
+      //   text: `Product with ID ${id} has been updated.`,
+      //   icon: "success",
+      //   confirmButtonText: "OK",
+      // });
     } catch (error) {
       console.error("Error saving data:", error);
       // Show error message
@@ -133,10 +168,29 @@ export default function Products() {
     }
   };
 
-  const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    return updatedRow;
+  const processRowUpdate = async (newRow) => {
+    try {
+      const { _id, ...updateDataWithoutId } = newRow;
+      // Update data on the server
+      await axios.patch(
+        `http://localhost:3000/api/products/${_id}`,
+        updateDataWithoutId,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      return { ...newRow, id: _id };
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        title: "Error!",
+        text: `Failed to save product with ID ${id}. Please try again later.`,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
   };
 
   const handleRowModesModelChange = (newRowModesModel) => {

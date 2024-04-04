@@ -38,6 +38,12 @@ export default function Staff() {
           isNew: false,
         }));
         setRows(formattedData);
+
+        const initialRowModesModel = {};
+        formattedData.forEach((row) => {
+          initialRowModesModel[row.id] = { mode: GridRowModes.View };
+        });
+        setRowModesModel(initialRowModesModel);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -59,23 +65,22 @@ export default function Staff() {
 
       if (result.isConfirmed) {
         const updatedRow = rows.find((row) => row.id === id);
-        const { _id, ...updateDataWithoutId } = updatedRow;
-        console.log(updateDataWithoutId);
-        await axios.patch(
-          `http://localhost:3000/api/staff/${_id}`,
-          updateDataWithoutId
-        );
-        // Ubah mode baris kembali menjadi mode tampilan
-        setRowModesModel((prevModesModel) => ({
-          ...prevModesModel,
-          [id]: { mode: GridRowModes.View },
-        }));
-        Swal.fire({
-          title: "Success",
-          text: "Data has been updated.",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
+        if (updatedRow) {
+          await processRowUpdate(updatedRow);
+          Swal.fire({
+            title: "Success",
+            text: "Data has been updated.",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          setRowModesModel((prevModesModel) => ({
+            ...prevModesModel,
+            [id]: { mode: GridRowModes.View },
+          }));
+        } else {
+          console.error("Row with ID", id, "not found.");
+          // Handle the case when row with given ID is not found
+        }
       } else {
         Swal.fire({
           title: "Cancelled",
@@ -154,12 +159,19 @@ export default function Staff() {
     }
   };
 
-  const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows((prevRows) =>
-      prevRows.map((row) => (row.id === newRow.id ? updatedRow : row))
-    );
-    return updatedRow;
+  const processRowUpdate = async (newRow) => {
+    try {
+      const { id, _id, ...updateDataWithoutId } = newRow;
+
+      await axios.patch(
+        `http://localhost:3000/api/staff/${_id}`,
+        updateDataWithoutId
+      );
+      return { ...newRow, id: _id };
+    } catch (error) {
+      console.error("Error updating data:", error);
+      throw error;
+    }
   };
 
   const columns = [
@@ -228,7 +240,8 @@ export default function Staff() {
       headerAlign: "center",
       align: "center",
       getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+        const isInEditMode =
+          rowModesModel[id] && rowModesModel[id].mode === GridRowModes.Edit;
 
         if (isInEditMode) {
           return [
@@ -295,6 +308,14 @@ export default function Staff() {
         editMode="row"
         rowModesModel={rowModesModel}
         processRowUpdate={processRowUpdate}
+        onProcessRowUpdateError={(error) => {
+          console.error("Error updating row:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+          });
+        }}
         sx={{
           flexGrow: 1,
           width: "70%",
