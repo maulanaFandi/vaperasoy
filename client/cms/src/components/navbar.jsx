@@ -95,7 +95,6 @@ export default function Navbar() {
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-end",
-            px: [1],
           }}>
           <IconButton onClick={toggleDrawer}>
             <ChevronLeftIcon />

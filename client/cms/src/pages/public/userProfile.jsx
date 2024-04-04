@@ -61,85 +61,94 @@ const UserProfile = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ textAlign: "center", paddingTop: "100px" }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
-        <Box
+    <>
+      {loading ? (
+        <Grid
           sx={{
             display: "flex",
-            flexDirection: "row",
-            width: "100%", // Adjusted width for responsiveness
-            maxWidth: "90%", // Added max width for better layout on larger screens
-            boxShadow: 3,
-            borderRadius: "16px",
-            padding: "40px",
-            border: "1px solid",
-            ml: "auto", // Center align on larger screens
-            mr: "auto", // Center align on larger screens
+            justifyContent: "center",
+            marginTop: "200px",
           }}>
-          {loading ? (
-            <Grid container justifyContent="center" sx={{ paddingTop: "25px" }}>
-              <CircularProgress />
-            </Grid>
-          ) : (
-            <>
+          <CircularProgress />
+        </Grid>
+      ) : (
+        <>
+          <Container
+            maxWidth="md"
+            sx={{ textAlign: "center", paddingTop: "100px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}>
               <Box
                 sx={{
                   display: "flex",
-                  alignItems: "center",
                   flexDirection: "row",
+                  width: "100%", // Adjusted width for responsiveness
+                  maxWidth: "90%", // Added max width for better layout on larger screens
+                  boxShadow: 3,
+                  borderRadius: "16px",
+                  padding: "40px",
+                  border: "1px solid",
+                  ml: "auto", // Center align on larger screens
+                  mr: "auto", // Center align on larger screens
                 }}>
-                <CardMedia
-                  component="img"
-                  sx={{ maxWidth: "30%", height: "auto" }} // Adjusted image size for responsiveness
-                  image={userData.imgUrl}
-                />
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: "column",
-                    gap: 2,
-                    textAlign: "left",
-                    fontSize: { xs: "0.5rem", sm: "1.5rem", md: "2rem" },
+                    alignItems: "center",
+                    flexDirection: "row",
                   }}>
-                  <Typography
-                    variant="h5"
-                    fontWeight="semibold"
+                  <CardMedia
+                    component="img"
+                    sx={{ maxWidth: "30%", height: "auto" }} // Adjusted image size for responsiveness
+                    image={userData.imgUrl}
+                  />
+                  <Box
                     sx={{
-                      fontSize: ["0.5rem", "1.5rem", "2rem"], // Array of font sizes for different breakpoints
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 2,
+                      textAlign: "left",
+                      fontSize: { xs: "0.5rem", sm: "1.5rem", md: "2rem" },
                     }}>
-                    Name: {userData.name}
-                  </Typography>
-                  <Typography variant="h5" fontWeight="semibold">
-                    Email: {userData.email}
-                  </Typography>
-                  <Typography variant="h5" fontWeight="semibold">
-                    Gender: {userData.gender}
-                  </Typography>
-                  <Typography variant="h5" fontWeight="semibold">
-                    Birth Date: {formatDate(userData.birthDate)}
-                  </Typography>
-                  <Typography variant="h5" fontWeight="semibold">
-                    Age: {formatAge(userData.birthDate)}
-                  </Typography>
-                  <Typography variant="h5" fontWeight="semibold">
-                    Phone Number: {userData.phoneNumber}
-                  </Typography>
-                  <Typography variant="h5" fontWeight="semibold">
-                    Address: {userData.address}
-                  </Typography>
-                  {/* Add other user profile information here */}
+                    <Typography
+                      variant="h5"
+                      fontWeight="semibold"
+                      sx={{
+                        fontSize: ["0.5rem", "1.5rem", "2rem"], // Array of font sizes for different breakpoints
+                      }}>
+                      Name: {userData.name}
+                    </Typography>
+                    <Typography variant="h5" fontWeight="semibold">
+                      Email: {userData.email}
+                    </Typography>
+                    <Typography variant="h5" fontWeight="semibold">
+                      Gender: {userData.gender}
+                    </Typography>
+                    <Typography variant="h5" fontWeight="semibold">
+                      Birth Date: {formatDate(userData.birthDate)}
+                    </Typography>
+                    <Typography variant="h5" fontWeight="semibold">
+                      Age: {formatAge(userData.birthDate)}
+                    </Typography>
+                    <Typography variant="h5" fontWeight="semibold">
+                      Phone Number: {userData.phoneNumber}
+                    </Typography>
+                    <Typography variant="h5" fontWeight="semibold">
+                      Address: {userData.address}
+                    </Typography>
+                    {/* Add other user profile information here */}
+                  </Box>
                 </Box>
               </Box>
-            </>
-          )}
-        </Box>
-      </Box>
-    </Container>
+            </Box>
+          </Container>
+        </>
+      )}
+    </>
   );
 };
 

@@ -57,7 +57,7 @@ export default function ListUser() {
 
     Swal.fire({
       title: "Are you sure?",
-      text: `You are about to delete the member with NIK ${row.IDNumber}`,
+      text: `You are about to delete the member with ID ${row._id}`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
@@ -73,14 +73,14 @@ export default function ListUser() {
         setRows(rows.filter((row) => row.id !== id));
         Swal.fire({
           title: "Deleted!",
-          text: `The member with NIK ${row.IDNumber} has been deleted.`,
+          text: `The member with ID ${row._id} has been deleted.`,
           icon: "success",
           confirmButtonText: "OK",
         });
       } else {
         Swal.fire({
           title: "Cancelled",
-          text: `The member with NIK ${row.IDNumber} was not deleted.`,
+          text: `The member with ID ${row._id} was not deleted.`,
           icon: "error",
           confirmButtonText: "OK",
         });
@@ -89,6 +89,7 @@ export default function ListUser() {
   };
 
   const columns = [
+    { field: "_id", headerName: "ID", width: 200 },
     { field: "name", headerName: "Name", width: 180 },
     { field: "email", headerName: "Email", width: 180 },
     {
