@@ -39,15 +39,11 @@ export default function AddStaffForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/staff",
-        formData,
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      );
+      await axios.post("http://localhost:3000/api/staff", formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
 
       Swal.fire({
         icon: "success",
@@ -135,8 +131,7 @@ export default function AddStaffForm() {
                     onChange={handleChange}
                     label="Gender"
                     variant="outlined"
-                    fullWidth
->
+                    fullWidth>
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>

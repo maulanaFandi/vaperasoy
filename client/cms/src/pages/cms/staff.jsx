@@ -2,15 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
-import {
-  GridRowModes,
-  DataGrid,
-  GridActionsCellItem,
-  GridRowEditStopReasons,
-} from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, GridRowModes } from "@mui/x-data-grid";
 import { Button, Typography } from "@mui/material";
 import Swal from "sweetalert2";
 
@@ -25,13 +20,6 @@ const calculateAge = (birthDate) => {
   return age;
 };
 
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-  }).format(amount);
-};
-
 export default function Staff() {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
@@ -40,57 +28,62 @@ export default function Staff() {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/staff");
-        console.log(response.data);
-        setRows(
-          response.data.map((row) => ({
-            ...row,
-            id: row._id,
-            age: !isNaN(calculateAge(row.birthDate))
-              ? calculateAge(row.birthDate)
-              : "",
-            birthDate: Date.parse(row.birthDate) ? new Date(row.birthDate) : "",
-            salary: formatCurrency(row.salary),
-            isNew: false,
-          }))
-        );
+        const formattedData = response.data.map((row) => ({
+          ...row,
+          id: row._id,
+          age: !isNaN(calculateAge(row.birthDate))
+            ? calculateAge(row.birthDate)
+            : "",
+          birthDate: Date.parse(row.birthDate) ? new Date(row.birthDate) : "",
+          isNew: false,
+        }));
+        setRows(formattedData);
       } catch (error) {
         console.error("Error fetching data:", error);
-        return [];
       }
     };
     fetchData();
   }, []);
 
-  const handleRowEditStop = (params, event) => {
-    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-      event.defaultMuiPrevented = true;
-    }
-  };
-
-  const handleEditClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
-
-  const handleSaveClick = (id) => async () => {
+  const handleSaveClick = async (id) => {
     try {
-      const updatedRow = rows.find((row) => row.id === id);
-      const { _id, ...updateDataWithoutId } = updatedRow;
-      console.log("Updated row:", updatedRow);
-      console.log("Update data without id:", updateDataWithoutId);
-      const result = await axios.patch(
-        `http://localhost:3000/api/staff/${_id}`,
-        updateDataWithoutId
-      );
-      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-      setRows(
-        rows.map((row) => (row.id === id ? { ...row, ...result.data } : row))
-      );
-      Swal.fire({
-        title: "Success",
-        text: "Data has been updated.",
-        icon: "success",
-        confirmButtonText: "OK",
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: `Save Editing With ID ${id}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Save it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
       });
+
+      if (result.isConfirmed) {
+        const updatedRow = rows.find((row) => row.id === id);
+        const { _id, ...updateDataWithoutId } = updatedRow;
+        console.log(updateDataWithoutId);
+        await axios.patch(
+          `http://localhost:3000/api/staff/${_id}`,
+          updateDataWithoutId
+        );
+        // Ubah mode baris kembali menjadi mode tampilan
+        setRowModesModel((prevModesModel) => ({
+          ...prevModesModel,
+          [id]: { mode: GridRowModes.View },
+        }));
+        Swal.fire({
+          title: "Success",
+          text: "Data has been updated.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      } else {
+        Swal.fire({
+          title: "Cancelled",
+          text: `Data with ID ${id} was not Saved.`,
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
     } catch (error) {
       console.error("Error updating data:", error);
       Swal.fire({
@@ -102,24 +95,28 @@ export default function Staff() {
     }
   };
 
-  const handleDeleteClick = (id) => () => {
-    const row = rows.find((row) => row.id === id);
-    if (!row) {
-      return;
-    }
+  const handleEditClick = (id) => {
+    setRowModesModel((prevModesModel) => ({
+      ...prevModesModel,
+      [id]: { mode: GridRowModes.Edit },
+    }));
+  };
 
-    Swal.fire({
-      title: "Are you sure?",
-      text: `You are about to delete the staff member with ID ${id}`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
-      reverseButtons: true,
-    }).then((result) => {
+  const handleDeleteClick = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: `You are about to delete the staff member with ID ${id}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      });
+
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:3000/api/staff/${id}`);
-        setRows(rows.filter((row) => row.id !== id));
+        await axios.delete(`http://localhost:3000/api/staff/${id}`);
+        setRows((prevRows) => prevRows.filter((row) => row.id !== id));
         Swal.fire({
           title: "Deleted!",
           text: `The staff member with ID ${id} has been deleted.`,
@@ -134,29 +131,35 @@ export default function Staff() {
           confirmButtonText: "OK",
         });
       }
-    });
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      Swal.fire({
+        title: "Error",
+        text: "Failed to delete data. Please try again later.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
   };
 
-  const handleCancelClick = (id) => () => {
-    setRowModesModel({
-      ...rowModesModel,
+  const handleCancelClick = (id) => {
+    setRowModesModel((prevModesModel) => ({
+      ...prevModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
+    }));
 
     const editedRow = rows.find((row) => row.id === id);
     if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
+      setRows((prevRows) => prevRows.filter((row) => row.id !== id));
     }
   };
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    setRows((prevRows) =>
+      prevRows.map((row) => (row.id === newRow.id ? updatedRow : row))
+    );
     return updatedRow;
-  };
-
-  const handleRowModesModelChange = (newRowModesModel) => {
-    setRowModesModel(newRowModesModel);
   };
 
   const columns = [
@@ -176,6 +179,15 @@ export default function Staff() {
       editable: true,
     },
     {
+      field: "gender",
+      headerName: "Gender",
+      width: 100,
+      align: "left",
+      editable: true,
+      type: "singleSelect",
+      valueOptions: ["male", "female"],
+    },
+    {
       field: "birthDate",
       headerName: "Birth Date",
       type: "date",
@@ -192,6 +204,7 @@ export default function Staff() {
     {
       field: "salary",
       headerName: "Salary",
+      type: "number",
       width: 100,
       editable: true,
     },
@@ -202,13 +215,18 @@ export default function Staff() {
       editable: true,
     },
     {
+      field: "address",
+      headerName: "Address",
+      width: 100,
+      editable: true,
+    },
+    {
       field: "actions",
       type: "actions",
       headerName: "Actions",
       width: 200,
       headerAlign: "center",
       align: "center",
-      cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
@@ -220,13 +238,13 @@ export default function Staff() {
               sx={{
                 color: "primary.main",
               }}
-              onClick={handleSaveClick(id)}
+              onClick={() => handleSaveClick(id)}
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}
               label="Cancel"
               className="textPrimary"
-              onClick={handleCancelClick(id)}
+              onClick={() => handleCancelClick(id)}
               color="inherit"
             />,
           ];
@@ -238,12 +256,12 @@ export default function Staff() {
             color="primary"
             size="small"
             startIcon={<EditIcon />}
-            onClick={handleEditClick(id)}
+            onClick={() => handleEditClick(id)}
             sx={{ mr: 1 }}></Button>,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={() => handleDeleteClick(id)}
             color="error"
           />,
         ];
@@ -276,8 +294,6 @@ export default function Staff() {
         columns={columns}
         editMode="row"
         rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
         sx={{
           flexGrow: 1,

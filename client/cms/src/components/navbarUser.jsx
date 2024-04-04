@@ -85,7 +85,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                 px: 0,
               }}>
               <Link to={"/"} style={{ textDecoration: "none" }}>
-                <Typography style={logoStyle}>Catalogue</Typography>
+                <Typography style={logoStyle}>Vaperasoy Catalogue</Typography>
               </Link>
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 {isLoggedIn && (
@@ -190,13 +190,13 @@ function AppAppBar({ mode, toggleColorMode }) {
                   <Divider />
                   {isLoggedIn ? (
                     <Link to={"/"}>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      onClick={handleLogout}
-                      sx={{ width: "100%" }}>
-                      Logout
-                    </Button>
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={handleLogout}
+                        sx={{ width: "100%" }}>
+                        Logout
+                      </Button>
                     </Link>
                   ) : (
                     <>

@@ -43,11 +43,6 @@ export default function Register() {
       const response = await axios.post(
         "http://localhost:3000/api/register",
         formData,
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
       );
 
       Swal.fire({
@@ -88,7 +83,6 @@ export default function Register() {
                   label="Name"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -101,7 +95,6 @@ export default function Register() {
                   label="Email"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -114,7 +107,6 @@ export default function Register() {
                   label="Password"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -127,7 +119,6 @@ export default function Register() {
                   label="Password Confirmation"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -139,7 +130,6 @@ export default function Register() {
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -152,7 +142,6 @@ export default function Register() {
                   label="Phone Number"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -167,7 +156,7 @@ export default function Register() {
                     label="Gender"
                     variant="outlined"
                     fullWidth
-                    required>
+>
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
@@ -186,7 +175,6 @@ export default function Register() {
                   label="NIK"
                   variant="outlined"
                   fullWidth
-                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -196,7 +184,6 @@ export default function Register() {
                   value={formData.address}
                   onChange={handleChange}
                   placeholder="Address"
-                  required
                   style={{ width: "100%", minHeight: 100 }}
                 />
               </Grid>

@@ -1,4 +1,5 @@
 const { db } = require("../config/database");
+const { ObjectId } = require("mongodb");
 
 class ProductModel {
   static getCollection() {

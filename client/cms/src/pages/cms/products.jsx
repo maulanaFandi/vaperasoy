@@ -2,45 +2,42 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import {
-  GridRowModes,
   DataGrid,
   GridActionsCellItem,
+  GridRowModes,
   GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
-
-const fetchData = async () => {
-  try {
-    const response = await axios.get("http://localhost:3000/api/products", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    });
-    return response.data.map((item) => ({
-      ...item,
-      id: item._id,
-    }));
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return [];
-  }
-};
+import Swal from "sweetalert2";
 
 export default function Products() {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
 
   useEffect(() => {
-    const fetchDataFromAPI = async () => {
-      const newData = await fetchData();
-      setRows(newData);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/products", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
+        setRows(
+          response.data.map((item) => ({
+            ...item,
+            id: item._id,
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
-    fetchDataFromAPI();
+    fetchData();
   }, []);
 
   const handleRowEditStop = (params, event) => {
@@ -53,12 +50,75 @@ export default function Products() {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
-  const handleSaveClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+  const handleSaveClick = (id) => async () => {
+    try {
+      const { _id, ...updateDataWithoutId } = rows.find((row) => row.id === id);
+      // Update data on the server
+      await axios.patch(
+        `http://localhost:3000/api/products/${_id}`,
+        updateDataWithoutId,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      // Update row mode
+      setRowModesModel({
+        ...rowModesModel,
+        [_id]: { mode: GridRowModes.View },
+      });
+      console.log(rowModesModel);
+
+      // Show success message
+      Swal.fire({
+        title: "Saved!",
+        text: `Product with ID ${id} has been updated.`,
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    } catch (error) {
+      console.error("Error saving data:", error);
+      // Show error message
+      Swal.fire({
+        title: "Error!",
+        text: `Failed to save product with ID ${id}. Please try again later.`,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
   };
 
-  const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
+  const handleDeleteClick = (id) => async () => {
+    try {
+      // Delete data on the server
+      await axios.delete(`http://localhost:3000/api/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      // Remove row from state
+      setRows(rows.filter((row) => row.id !== id));
+
+      // Show success message
+      Swal.fire({
+        title: "Deleted!",
+        text: `Product with ID ${id} has been deleted.`,
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      // Show error message
+      Swal.fire({
+        title: "Error!",
+        text: `Failed to delete product with ID ${id}. Please try again later.`,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
   };
 
   const handleCancelClick = (id) => () => {
@@ -113,7 +173,7 @@ export default function Products() {
       field: "actions",
       type: "actions",
       headerName: "Actions",
-      width: 100,
+      width: 140,
       cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -150,7 +210,7 @@ export default function Products() {
             icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteClick(id)}
-            color="inherit"
+            color="error"
           />,
         ];
       },
@@ -174,7 +234,7 @@ export default function Products() {
           color: "text.primary",
         },
       }}>
-      <Typography variant="h6" sx={{ textAlign: "Left", marginTop: "20px" }}>
+      <Typography variant="h6" sx={{ textAlign: "left", marginTop: "20px" }}>
         Products List
       </Typography>
       <DataGrid
@@ -189,10 +249,9 @@ export default function Products() {
           flexGrow: 1,
           width: "70%",
           marginBottom: "10px",
-          marginLeft: "250px",
+          marginLeft: "auto",
           marginRight: "auto",
-          alignText: "center",
-          alignContent: "center",
+          textAlign: "center",
         }}
       />
     </Box>

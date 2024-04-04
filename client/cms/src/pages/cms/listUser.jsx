@@ -70,7 +70,11 @@ export default function ListUser() {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:3000/api/users/${id}`);
+        axios.delete(`http://localhost:3000/api/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
         setRows(rows.filter((row) => row.id !== id));
         Swal.fire({
           title: "Deleted!",

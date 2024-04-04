@@ -23,6 +23,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Swal from "sweetalert2";
 
 const decodeAccessToken = (accessToken) => {
   return jwtDecode(accessToken);
@@ -31,6 +32,7 @@ const decodeAccessToken = (accessToken) => {
 const isNotCompleteData = () => {
   const accessToken = localStorage.getItem("access_token");
   const decodedToken = decodeAccessToken(accessToken);
+  console.log(accessToken);
 
   const incompleteFields = [];
   if (!decodedToken.name) incompleteFields.push("Name");
@@ -62,15 +64,15 @@ export default function UserProducts() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (token) {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      }
-
       try {
-        const response = await axios
-          .get
-          // `http://localhost:3000/api/users/${params.id}`
-          ();
+        const response = await axios.get(
+          // `http://localhost:3000/api/products`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setData(response.data);
       } catch (error) {
         console.error(error);
@@ -103,10 +105,25 @@ export default function UserProducts() {
   };
 
   // Fungsi untuk menangani submit form
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Lakukan sesuatu dengan data yang di-submit
-    console.log(formData);
+    try {
+      await axios.patch(
+        `http://localhost:3000/api/users/${params.id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "warning",
+        text: error.response.data.message,
+      });
+    }
   };
 
   return (

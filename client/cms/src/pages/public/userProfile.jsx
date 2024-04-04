@@ -5,16 +5,21 @@ import {
   Container,
   Typography,
   CircularProgress,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
 } from "@mui/material";
 
+const formatAge = (birthDate) => {
+  const today = new Date();
+  const dob = new Date(birthDate);
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+  return age;
+};
+
 const UserProfile = () => {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,7 +34,7 @@ const UserProfile = () => {
           "http://localhost:3000/api/users/profile",
           {
             headers: {
-              Authorization: `Bearer ${token}`, 
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -74,42 +79,24 @@ const UserProfile = () => {
                   <Typography variant="h5" fontWeight="semibold">
                     Email: {userData.email}
                   </Typography>
+                  <Typography variant="h5" fontWeight="semibold">
+                    Gender: {userData.gender}
+                  </Typography>
+                  <Typography variant="h5" fontWeight="semibold">
+                    Birth Date: {userData.birthDate}
+                  </Typography>
+                  <Typography variant="h5" fontWeight="semibold">
+                    Age: {formatAge(userData.birthDate)}
+                  </Typography>
+                  <Typography variant="h5" fontWeight="semibold">
+                    Phone Number: {userData.phoneNumber}
+                  </Typography>
+                  <Typography variant="h5" fontWeight="semibold">
+                    Address: {userData.address}
+                  </Typography>
+                  
                   {/* Add other user profile information here */}
                 </Box>
-              </Box>
-
-              <Box className="flex flex-col justify-center items-center pt-20">
-                <Box className="text-center mb-10">
-                  <Typography variant="h4" fontWeight="bold">
-                    Schedule
-                  </Typography>
-                </Box>
-                {userData.schedule && userData.schedule.length > 0 ? (
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Day</TableCell>
-                          <TableCell>Time</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {userData.schedule.map((data, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{getDayFromDate(data.day)}</TableCell>
-                            <TableCell>
-                              {`${data.start}:00 - ${data.end}:00`}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                ) : (
-                  <Typography variant="h6">
-                    No appointments scheduled
-                  </Typography>
-                )}
               </Box>
             </>
           )}
