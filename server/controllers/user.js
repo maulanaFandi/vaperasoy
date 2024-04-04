@@ -14,7 +14,6 @@ class UserController {
         birthDate,
         phoneNumber,
         gender,
-        IDNumber,
         address,
       } = req.body;
 
@@ -42,10 +41,6 @@ class UserController {
         throw { name: "GenderNotEmpty" };
       }
 
-      if (!IDNumber) {
-        throw { name: "IDNotEmpty" };
-      }
-
       if (!address) {
         throw { name: "AddressNotEmpty" };
       }
@@ -57,7 +52,6 @@ class UserController {
         birthDate,
         phoneNumber,
         gender,
-        IDNumber,
         address,
       };
 

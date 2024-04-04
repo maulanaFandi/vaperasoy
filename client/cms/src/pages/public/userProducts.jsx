@@ -48,7 +48,6 @@ export default function UserProducts() {
         // Check if user data is incomplete
         if (
           !response.data.birthDate ||
-          !response.data.IDNumber ||
           !response.data.address ||
           !response.data.phoneNumber ||
           !response.data.gender

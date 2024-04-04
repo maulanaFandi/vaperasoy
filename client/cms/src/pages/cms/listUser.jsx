@@ -111,7 +111,6 @@ export default function ListUser() {
       type: "singleSelect",
       valueOptions: ["Male", "Female"],
     },
-    { field: "IDNumber", headerName: "NIK", width: 180 },
     { field: "address", headerName: "Address", width: 180 },
     {
       field: "actions",
