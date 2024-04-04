@@ -5,6 +5,8 @@ import {
   Container,
   Typography,
   CircularProgress,
+  Grid,
+  CardMedia,
 } from "@mui/material";
 
 const formatAge = (birthDate) => {
@@ -50,30 +52,60 @@ const UserProfile = () => {
     fetchData();
   }, []);
 
-  const getDayFromDate = (date) => {
-    // Implementasi fungsi untuk mendapatkan hari dari tanggal
+  const formatDate = (dateString) => {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString('id-ID', options);
+    return formattedDate;
   };
 
   return (
-    <Container
-      maxWidth="md"
-      style={{ textAlign: "center", paddingTop: "50px" }}>
-      <Box className="flex justify-center items-center">
-        <Box className="w-3/4 shadow-xl rounded-2xl p-10 border ml-60">
+    <Container maxWidth="md" sx={{ textAlign: "center", paddingTop: "100px" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            width: "100%", // Adjusted width for responsiveness
+            maxWidth: "90%", // Added max width for better layout on larger screens
+            boxShadow: 3,
+            borderRadius: "16px",
+            padding: "40px",
+            border: "1px solid",
+            ml: "auto", // Center align on larger screens
+            mr: "auto", // Center align on larger screens
+          }}>
           {loading ? (
-            <CircularProgress />
+            <Grid container justifyContent="center" sx={{ paddingTop: "25px" }}>
+              <CircularProgress />
+            </Grid>
           ) : (
             <>
-              <Box className="flex items-center">
-                <Box>
-                  <img
-                    src={userData.imgUrl}
-                    alt=""
-                    className="rounded-2xl h-40 w-40"
-                  />
-                </Box>
-                <Box className="flex flex-col gap-2 text-left ml-20">
-                  <Typography variant="h3" fontWeight="bold">
+              <Box sx={{ display: "flex", alignItems: "center", flexDirection: "row" }}>
+                <CardMedia
+                  component="img"
+                  sx={{ maxWidth: "30%", height: "auto" }} // Adjusted image size for responsiveness
+                  image={userData.imgUrl}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2,
+                    textAlign: "left",
+                    fontSize: { xs: "0.5rem", sm: "1.5rem", md: "2rem" }
+                  }}>
+                  <Typography
+                    variant="h5"
+                    fontWeight="semibold"
+                    sx={{
+                      fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" } // Adjust font size for different breakpoints
+                    }}>
                     Name: {userData.name}
                   </Typography>
                   <Typography variant="h5" fontWeight="semibold">
@@ -83,7 +115,7 @@ const UserProfile = () => {
                     Gender: {userData.gender}
                   </Typography>
                   <Typography variant="h5" fontWeight="semibold">
-                    Birth Date: {userData.birthDate}
+                    Birth Date: {formatDate(userData.birthDate)}
                   </Typography>
                   <Typography variant="h5" fontWeight="semibold">
                     Age: {formatAge(userData.birthDate)}
@@ -94,7 +126,6 @@ const UserProfile = () => {
                   <Typography variant="h5" fontWeight="semibold">
                     Address: {userData.address}
                   </Typography>
-                  
                   {/* Add other user profile information here */}
                 </Box>
               </Box>

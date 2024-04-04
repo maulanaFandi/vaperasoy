@@ -35,7 +35,7 @@ const isNotCompleteData = () => {
   console.log(accessToken);
 
   const incompleteFields = [];
-  if (!decodedToken.name) incompleteFields.push("Name");
+  if (!decodedToken.gender) incompleteFields.push("Gender");
   if (!decodedToken.birthDate) incompleteFields.push("Birth Date");
   if (!decodedToken.IDNumber) incompleteFields.push("ID Number");
   if (!decodedToken.address) incompleteFields.push("Address");
