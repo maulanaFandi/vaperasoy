@@ -42,7 +42,7 @@ export default function Register() {
     try {
       const response = await axios.post(
         "http://localhost:3000/api/register",
-        formData,
+        formData
       );
 
       Swal.fire({
@@ -134,7 +134,6 @@ export default function Register() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  type="tel"
                   id="phone"
                   name="phoneNumber"
                   value={formData.phoneNumber}
@@ -155,8 +154,7 @@ export default function Register() {
                     onChange={handleChange}
                     label="Gender"
                     variant="outlined"
-                    fullWidth
->
+                    fullWidth>
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>

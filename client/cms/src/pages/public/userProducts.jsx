@@ -3,126 +3,97 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-// import Hero from './components/Hero';
-// import LogoCollection from './components/LogoCollection';
-// import Highlights from "../../components/Highlights";
-// import Pricing from "../../components/Pricing";
-// import Features from './components/Features';
-// import Testimonials from './components/Testimonials';
-// import FAQ from './components/FAQ';
 import Footer from "../../components/Footer";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
 import {
   Button,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
   Modal,
   Paper,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import Swal from "sweetalert2";
-
-const decodeAccessToken = (accessToken) => {
-  return jwtDecode(accessToken);
-};
-
-const isNotCompleteData = () => {
-  const accessToken = localStorage.getItem("access_token");
-  const decodedToken = decodeAccessToken(accessToken);
-  console.log(accessToken);
-
-  const incompleteFields = [];
-  if (!decodedToken.gender) incompleteFields.push("Gender");
-  if (!decodedToken.birthDate) incompleteFields.push("Birth Date");
-  if (!decodedToken.IDNumber) incompleteFields.push("ID Number");
-  if (!decodedToken.address) incompleteFields.push("Address");
-  if (!decodedToken.phoneNumber) incompleteFields.push("Phone Number");
-  if (!decodedToken.gender) incompleteFields.push("Gender");
-
-  return incompleteFields;
-};
 
 export default function UserProducts() {
   const defaultTheme = createTheme();
-  const [Data, setData] = useState([]);
-  const [showModal, setShowModal] = useState(false); // Menampilkan modal jika ada bidang yang tidak lengkap
-  const [incompleteFields, setIncompleteFields] = useState([]); // Daftar bidang yang tidak lengkap
+  const [dataUser, setDataUser] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    gender: "",
     birthDate: "",
     IDNumber: "",
     address: "",
     phoneNumber: "",
-    gender: "",
   });
 
-  const params = useParams();
-  const token = localStorage.getItem("access_token");
-
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDataUser = async () => {
       try {
         const response = await axios.get(
-          // `http://localhost:3000/api/products`,
+          "http://localhost:3000/api/users/profile", // Adjust the URL accordingly
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             },
           }
         );
-        setData(response.data);
+        setDataUser(response.data);
+        // Check if user data is incomplete
+        if (
+          !response.data.birthDate ||
+          !response.data.IDNumber ||
+          !response.data.address ||
+          !response.data.phoneNumber ||
+          !response.data.gender
+        ) {
+          setShowModal(true);
+        }
       } catch (error) {
         console.error(error);
       }
     };
-    fetchData();
-  }, [params.id, token]);
+    fetchDataUser();
+  }, []);
 
-  useEffect(() => {
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      const fields = isNotCompleteData(decodedToken);
-      setIncompleteFields(fields);
-
-      if (fields.length > 0) {
-        setShowModal(true);
-      }
-    }
-  }, [token]);
-
-  // Fungsi untuk menutup modal
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
-  // Fungsi untuk mengubah nilai form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Fungsi untuk menangani submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(
-        `http://localhost:3000/api/users/${params.id}`,
-        formData,
+      const profileData = {
+        gender: formData.gender,
+        birthDate: formData.birthDate,
+        IDNumber: formData.IDNumber,
+        address: formData.address,
+        phoneNumber: formData.phoneNumber
+      };
+
+      await axios.put(
+        `http://localhost:3000/api/users/profile`, // Adjust the URL accordingly
+        profileData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
         }
       );
+      setShowModal(false);
+      Swal.fire({
+        icon: "success",
+        text: "Profile updated successfully!",
+      });
     } catch (error) {
       console.log(error);
-      Swal.fire({
-        icon: "warning",
-        text: error.response.data.message,
-      });
     }
   };
 
@@ -130,158 +101,115 @@ export default function UserProducts() {
     <ThemeProvider theme={defaultTheme}>
       <Modal
         open={showModal}
-        onClose={handleCloseModal}
         aria-labelledby="modal-title"
         aria-describedby="modal-description">
-        <Box className="modal">
-          <Grid
-            container
-            spacing={3}
-            justifyContent="center"
-            alignItems="center"
-            paddingTop={"100px"}
-            width={"50%"}
-            marginLeft={"25%"}>
-            <Paper
-              className="modal-content p-4"
-              style={{ width: "70%", maxHeight: "80%", overflow: "auto" }}>
-              <Typography variant="h5" id="modal-title">
-                Incomplete Data
-              </Typography>
-              <Typography variant="body1" id="modal-description">
-                Please complete the following fields:
-              </Typography>
-              <form onSubmit={handleSubmit}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      sx={{
-                        width: "50%",
-                        marginLeft: "25%",
-                        alignContent: "center",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        justifyItems: "center",
-                      }}
-                      label="Name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      sx={{
-                        width: "50%",
-                        marginLeft: "25%",
-                        alignContent: "center",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        justifyItems: "center",
-                      }}
-                      label="Birth Date"
-                      name="birthDate"
-                      type="date"
-                      value={formData.birthDate}
-                      onChange={handleInputChange}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      sx={{
-                        width: "50%",
-                        marginLeft: "25%",
-                        alignContent: "center",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        justifyItems: "center",
-                      }}
-                      label="ID Number"
-                      name="IDNumber"
-                      value={formData.IDNumber}
-                      onChange={handleInputChange}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      sx={{
-                        width: "50%",
-                        marginLeft: "25%",
-                        alignContent: "center",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        justifyItems: "center",
-                      }}
-                      label="Address"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      sx={{
-                        width: "50%",
-                        marginLeft: "25%",
-                        alignContent: "center",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        justifyItems: "center",
-                      }}
-                      label="Phone Number"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={handleInputChange}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      sx={{
-                        width: "50%",
-                        marginLeft: "25%",
-                        alignContent: "center",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        justifyItems: "center",
-                      }}
-                      label="Gender"
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}>
+          <Paper sx={{ p: 4, width: "70%", maxWidth: "800px" }}>
+            <Typography variant="h5" id="modal-title" gutterBottom>
+              Incomplete Data
+            </Typography>
+            <Typography variant="body1" id="modal-description">
+              Please complete the following fields:
+            </Typography>
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel id="gender-label">Gender</InputLabel>
+                    <Select
+                      labelId="gender-label"
+                      id="gender"
                       name="gender"
                       value={formData.gender}
                       onChange={handleInputChange}
-                      fullWidth
-                    />
-                  </Grid>
+                      label="Gender"
+                      variant="outlined"
+                      fullWidth>
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value="male">Male</MenuItem>
+                      <MenuItem value="female">Female</MenuItem>
+                    </Select>
+                  </FormControl>
                 </Grid>
-                <Button type="submit" variant="contained">
-                  Submit
-                </Button>
-                <Button variant="contained" onClick={handleCloseModal}>
-                  Close
-                </Button>
-              </form>
-            </Paper>
-          </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Birth Date"
+                    name="birthDate"
+                    type="date"
+                    id="age"
+                    value={formData.birthDate}
+                    onChange={handleInputChange}
+                    required
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="ID Number"
+                    name="IDNumber"
+                    id="NIK"
+                    value={formData.IDNumber}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="address"
+                    label="Address"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="phone"
+                    type="number"
+                    label="Phone Number"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button type="submit" variant="contained">
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </Paper>
         </Box>
       </Modal>
       <CssBaseline />
       {/* <Hero /> */}
       <Box sx={{ bgcolor: "background.default" }}>
-        {/* <LogoCollection />
-        <Features /> */}
-        {/* <Divider /> */}
-        {/* <Testimonials /> */}
-        {/* <Divider /> */}
-        {/* <Highlights /> */}
         {/* <Divider /> */}
         {/* <Pricing /> */}
         {/* <Divider /> */}
-        {/* <FAQ /> */}
-        <Divider />
+        {/* <CompanyCollection /> */}
+        {/* <Divider /> */}
+        {/* <Highlights /> */}
+        {/* <Divider /> */}
+        {/* <Testimonials /> */}
+        {/* <Divider /> */}
         <Footer />
       </Box>
     </ThemeProvider>

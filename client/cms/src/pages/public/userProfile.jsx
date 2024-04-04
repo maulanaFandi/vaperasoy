@@ -28,7 +28,6 @@ const UserProfile = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("access_token");
-        console.log(token);
         if (!token) {
           throw new Error("Access token not found");
         }
@@ -40,7 +39,6 @@ const UserProfile = () => {
             },
           }
         );
-        console.log(response.data);
         setUserData(response.data);
         setLoading(false);
       } catch (error) {
@@ -53,10 +51,13 @@ const UserProfile = () => {
   }, []);
 
   const formatDate = (dateString) => {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const date = new Date(dateString);
-    const formattedDate = date.toLocaleDateString('id-ID', options);
-    return formattedDate;
+    return date.toLocaleDateString("id-ID", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
   return (
@@ -86,7 +87,12 @@ const UserProfile = () => {
             </Grid>
           ) : (
             <>
-              <Box sx={{ display: "flex", alignItems: "center", flexDirection: "row" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}>
                 <CardMedia
                   component="img"
                   sx={{ maxWidth: "30%", height: "auto" }} // Adjusted image size for responsiveness
@@ -98,13 +104,13 @@ const UserProfile = () => {
                     flexDirection: "column",
                     gap: 2,
                     textAlign: "left",
-                    fontSize: { xs: "0.5rem", sm: "1.5rem", md: "2rem" }
+                    fontSize: { xs: "0.5rem", sm: "1.5rem", md: "2rem" },
                   }}>
                   <Typography
                     variant="h5"
                     fontWeight="semibold"
                     sx={{
-                      fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" } // Adjust font size for different breakpoints
+                      fontSize: ["0.5rem", "1.5rem", "2rem"], // Array of font sizes for different breakpoints
                     }}>
                     Name: {userData.name}
                   </Typography>

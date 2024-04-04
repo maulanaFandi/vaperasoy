@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 export default function MenuItemLink({
   to,
   pathName,
-  scrollToSection,
   children,
 }) {
   return (

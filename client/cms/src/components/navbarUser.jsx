@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import MenuItemLink from "./menuItemLink";
 
 const logoStyle = {
@@ -25,6 +25,7 @@ const logoStyle = {
 function AppAppBar({ mode, toggleColorMode }) {
   const [open, setOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
   const location = useLocation();
   const pathName = location.pathname;
 
@@ -39,9 +40,9 @@ function AppAppBar({ mode, toggleColorMode }) {
   };
 
   const handleLogout = () => {
-    // Clear access token from local storage
     localStorage.clear();
     setIsLoggedIn(false);
+    navigate("/");
   };
 
   return (
@@ -90,17 +91,15 @@ function AppAppBar({ mode, toggleColorMode }) {
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 {isLoggedIn && (
                   <>
-                    <MenuItemLink to="/profile" pathName={pathName}>
+                    <MenuItemLink to={"/profile"} pathName={pathName}>
                       Profile
                     </MenuItemLink>
-                    <MenuItemLink to="/products" pathName={pathName}>
+                    <MenuItemLink to={"/products"} pathName={pathName}>
                       Products
                     </MenuItemLink>
-                    <MenuItemLink to="/cart" pathName={pathName}>
+                    <MenuItemLink to={"/cart"} pathName={pathName}>
                       Cart
                     </MenuItemLink>
-                    {/* <MenuItemLink to="/pricing" pathName={pathName}>Pricing</MenuItemLink>
-          <MenuItemLink to="/faq" pathName={pathName}>FAQ</MenuItemLink> */}
                   </>
                 )}
               </Box>
@@ -112,34 +111,25 @@ function AppAppBar({ mode, toggleColorMode }) {
                 alignItems: "center",
               }}>
               {isLoggedIn ? (
-                <Link to={"/"}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    size="small"
-                    onClick={handleLogout}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  size="small"
+                  onClick={handleLogout}>
+                  <Link to={"/"} style={{ color: "inherit", textDecoration: "none" }}>
                     Logout
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               ) : (
                 <>
-                  <Link to={"/login"}>
-                    <Button
-                      color="primary"
-                      variant="text"
-                      size="small"
-                      component="a"
-                      target="_blank">
+                  <Link to={"/login"} style={{ textDecoration: "none" }}>
+                    <Button color="primary" variant="text" size="small">
                       Sign in
                     </Button>
                   </Link>
 
-                  <Link to={"/register"}>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      size="small"
-                      target="_blank">
+                  <Link to={"/register"} style={{ textDecoration: "none" }}>
+                    <Button color="primary" variant="contained" size="small">
                       Sign up
                     </Button>
                   </Link>
@@ -189,7 +179,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                   ) : null}
                   <Divider />
                   {isLoggedIn ? (
-                    <Link to={"/"}>
+                    <Link to={"/"} style={{ textDecoration: "none" }}>
                       <Button
                         color="primary"
                         variant="contained"
@@ -202,10 +192,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                     <>
                       <Link to={"/register"} style={{ textDecoration: "none" }}>
                         <MenuItem>
-                          <Button
-                            color="primary"
-                            variant="contained"
-                            sx={{ width: "100%" }}>
+                          <Button color="primary" variant="contained" sx={{ width: "100%" }}>
                             Sign up
                           </Button>
                         </MenuItem>
@@ -213,10 +200,7 @@ function AppAppBar({ mode, toggleColorMode }) {
 
                       <Link to={"/login"} style={{ textDecoration: "none" }}>
                         <MenuItem>
-                          <Button
-                            color="primary"
-                            variant="outlined"
-                            sx={{ width: "100%" }}>
+                          <Button color="primary" variant="outlined" sx={{ width: "100%" }}>
                             Sign in
                           </Button>
                         </MenuItem>

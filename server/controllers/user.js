@@ -195,6 +195,44 @@ class UserController {
       next(error);
     }
   }
+
+  static async updateProfile(req, res, next) {
+    try {
+      const userEmail = req.user.email;
+  
+      const userProfile = await UserModel.findByEmail(userEmail);
+  
+      if (!userProfile) {
+        return res.status(404).json({ message: "User profile not found" });
+      }
+  
+      const {
+        birthDate,
+        phoneNumber,
+        gender,
+        IDNumber,
+        address,
+      } = req.body;
+  
+      // Buat objek baru yang berisi data yang diperbarui
+      const updatedUserData = {
+        birthDate,
+        phoneNumber,
+        gender,
+        IDNumber,
+        address,
+      };
+  
+      // Panggil metode updateProfile dari UserModel dengan id pengguna dan data yang diperbarui
+      const updatedUser = await UserModel.updateById(userProfile._id, updatedUserData);
+  
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+  
 }
 
 module.exports = UserController;

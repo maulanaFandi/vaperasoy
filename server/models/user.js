@@ -1,6 +1,6 @@
 const { db } = require("../config/database");
 const { generate } = require("../helpers/bcrypt");
-const {ObjectId} = require('mongodb');
+const { ObjectId } = require("mongodb");
 
 class UserModel {
   static getCollection() {
