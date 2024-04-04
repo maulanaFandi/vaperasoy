@@ -72,7 +72,6 @@ export default function UserProducts() {
       const profileData = {
         gender: formData.gender,
         birthDate: formData.birthDate,
-        IDNumber: formData.IDNumber,
         address: formData.address,
         phoneNumber: formData.phoneNumber
       };
@@ -151,17 +150,6 @@ export default function UserProducts() {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="ID Number"
-                    name="IDNumber"
-                    id="NIK"
-                    value={formData.IDNumber}
-                    onChange={handleInputChange}
-                    required
                   />
                 </Grid>
                 <Grid item xs={12}>
