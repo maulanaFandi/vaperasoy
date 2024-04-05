@@ -65,7 +65,7 @@ export default function ProductCard() {
       }}>
       {products && products.length > 0 ? (
         products.map((product) => (
-          <Card sx={{ maxWidth: 345, mt: 3 }}>
+          <Card key={product._id} sx={{ maxWidth: 345, mt: 3 }}>
             <CardMedia
               component="img"
               alt="imageUrl"
@@ -81,7 +81,9 @@ export default function ProductCard() {
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size="small">Share</Button>
+            <Link to={`/products/${product._id}`}>
+              <Button size="small">View Detail</Button>
+            </Link>
             </CardActions>
           </Card>
         ))
