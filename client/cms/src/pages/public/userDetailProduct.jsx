@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import {
   Box,
   Container,
@@ -18,7 +20,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const id = params.id
+        const id = params.id;
         const response = await axios.get(
           "http://localhost:3000/api/products/" + id,
           {
@@ -36,6 +38,32 @@ const UserProfile = () => {
     };
     fetchData();
   }, []);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setProductData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (newData) => {
+    try {
+      const { _id, ...updateDataWithoutId } = newData;
+      await axios.patch(
+        "http://localhost:3000/api/products/" + _id,
+        updateDataWithoutId,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      return { ...newData, id: _id };
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -97,10 +125,10 @@ const UserProfile = () => {
                       sx={{
                         fontSize: ["0.5rem", "1.5rem", "2rem"], // Array of font sizes for different breakpoints
                       }}>
-                      Name: {productData.name}
+                      {productData.name}
                     </Typography>
                     <Typography variant="h5" fontWeight="semibold">
-                      Email: {productData.email}
+                      {productData.description}
                     </Typography>
                     <Typography variant="h5" fontWeight="semibold">
                       Gender: {productData.gender}
@@ -118,6 +146,31 @@ const UserProfile = () => {
                       Address: {productData.address}
                     </Typography>
                     {/* Add other user profile information here */}
+                  </Box>
+                  <Box component={"form"} onSubmit={handleSubmit}>
+                    <TextField
+                      onChange={handleChange}
+                      id="testimonial"
+                      label="Testimonial"
+                      name="testimonial"
+                      type="text"
+                      fullWidth
+                    />
+                    <Button
+                      type="submit"
+                      fullWidth
+                      sx={{
+                        mt: 3,
+                        mb: 2,
+                        backgroundColor: "green",
+                        color: "white",
+                        "&:hover": {
+                          backgroundColor: "green",
+                          color: "white",
+                        },
+                      }}>
+                      Submit
+                    </Button>
                   </Box>
                 </Box>
               </Box>
