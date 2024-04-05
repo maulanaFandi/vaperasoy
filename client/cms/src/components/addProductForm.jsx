@@ -38,7 +38,7 @@ export default function AddProductForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:3000/api/products",
         formData,
         {

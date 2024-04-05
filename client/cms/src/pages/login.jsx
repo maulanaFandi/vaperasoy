@@ -34,12 +34,11 @@ export default function SignInSide() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const data = await axios.post("http://localhost:3000/api/login", {
+      const response = await axios.post("http://localhost:3000/api/login", {
         email: loginInput.email,
         password: loginInput.password,
       });
-      localStorage.setItem("access_token", data.data.access_token);
-      console.log(data.data.access_token);
+      localStorage.setItem("access_token", response.data.access_token);
       Swal.fire({
         icon: "success",
         title: "Success",

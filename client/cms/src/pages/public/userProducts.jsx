@@ -3,6 +3,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import ProductCard from "../../components/ProductCard";
 import Footer from "../../components/Footer";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -196,7 +197,8 @@ export default function UserProducts() {
         {/* <Highlights /> */}
         {/* <Divider /> */}
         {/* <Testimonials /> */}
-        {/* <Divider /> */}
+        <ProductCard />
+        <Divider />
         <Footer />
       </Box>
     </ThemeProvider>
