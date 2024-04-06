@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Box, Container, Typography, CircularProgress, CardMedia } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  CircularProgress,
+  CardMedia,
+  useMediaQuery,
+} from "@mui/material";
 
 const formatAge = (birthDate) => {
   const today = new Date();
@@ -16,6 +23,7 @@ const formatAge = (birthDate) => {
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,11 +32,12 @@ const UserProfile = () => {
         if (!token) {
           throw new Error("Access token not found");
         }
-        const response = await axios.get("http://localhost:3000/api/users/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:3000/api/users/profile",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setUserData(response.data);
         setLoading(false);
       } catch (error) {
@@ -53,7 +62,12 @@ const UserProfile = () => {
   return (
     <Container maxWidth="md" sx={{ textAlign: "center", paddingTop: "100px" }}>
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", marginTop: "200px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "200px",
+          }}>
           <CircularProgress />
         </Box>
       ) : (
@@ -68,51 +82,72 @@ const UserProfile = () => {
               borderRadius: "16px",
               padding: "40px",
               border: "1px solid",
-            }}
-          >
+              ...(isMobile && {
+                display: "flex",
+                flexDirection: "row",
+                padding: "5px",
+              }),
+            }}>
+            <CardMedia
+              component="img"
+              sx={{
+                maxWidth: isMobile ? "20%" : "30%", // Ubah persentase sesuai kebutuhan
+                height: "auto",
+              }}
+              image={userData.imgUrl}
+              alt={userData.name}
+            />
+
             <Box
               sx={{
                 display: "flex",
-                alignItems: "center",
-                flexDirection: "row",
-              }}
-            >
-              <CardMedia
-                component="img"
-                sx={{ maxWidth: "30%", height: "auto" }}
-                image={userData.imgUrl}
-                alt={userData.name}
-              />
-              <Box
-                sx={{
+                flexDirection: "column",
+                ml: 3,
+                textAlign: "left",
+                ...(isMobile && {
                   display: "flex",
                   flexDirection: "column",
-                  gap: 2,
+                  alignItems: "left",
                   textAlign: "left",
-                }}
-              >
-                <Typography variant="h5" fontWeight="semibold">
-                  Name: {userData.name}
-                </Typography>
-                <Typography variant="h5" fontWeight="semibold">
-                  Email: {userData.email}
-                </Typography>
-                <Typography variant="h5" fontWeight="semibold">
-                  Gender: {userData.gender}
-                </Typography>
-                <Typography variant="h5" fontWeight="semibold">
-                  Birth Date: {formatDate(userData.birthDate)}
-                </Typography>
-                <Typography variant="h5" fontWeight="semibold">
-                  Age: {formatAge(userData.birthDate)}
-                </Typography>
-                <Typography variant="h5" fontWeight="semibold">
-                  Phone Number: {userData.phoneNumber}
-                </Typography>
-                <Typography variant="h5" fontWeight="semibold">
-                  Address: {userData.address}
-                </Typography>
-              </Box>
+                  ml: 0,
+                  mt: 3,
+                }),
+              }}>
+              <Typography
+                variant={isMobile ? "h7" : "h6"}
+                fontWeight="semibold">
+                Name: {userData.name}
+              </Typography>
+              <Typography
+                variant={isMobile ? "h7" : "h6"}
+                fontWeight="semibold">
+                Email: {userData.email}
+              </Typography>
+              <Typography
+                variant={isMobile ? "h7" : "h6"}
+                fontWeight="semibold">
+                Gender: {userData.gender}
+              </Typography>
+              <Typography
+                variant={isMobile ? "h7" : "h6"}
+                fontWeight="semibold">
+                Birth Date: {formatDate(userData.birthDate)}
+              </Typography>
+              <Typography
+                variant={isMobile ? "h7" : "h6"}
+                fontWeight="semibold">
+                Age: {formatAge(userData.birthDate)}
+              </Typography>
+              <Typography
+                variant={isMobile ? "h7" : "h6"}
+                fontWeight="semibold">
+                Phone Number: {userData.phoneNumber}
+              </Typography>
+              <Typography
+                variant={isMobile ? "h7" : "h6"}
+                fontWeight="semibold">
+                Address: {userData.address}
+              </Typography>
             </Box>
           </Box>
         </Box>

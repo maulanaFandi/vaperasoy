@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Grid, Typography, Select, MenuItem, InputLabel } from "@mui/material";
+import { Grid, Typography, Select, MenuItem, CircularProgress, Box } from "@mui/material";
 import { styled } from "@mui/system";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
@@ -139,9 +139,9 @@ export default function ProductCard() {
           </Grid>
         ))
       ) : (
-        <Typography variant="body1" gutterBottom>
-          No products available
-        </Typography>
+        <Box sx={{ display: "flex", justifyContent: "center", marginTop: "50px" }}>
+          <CircularProgress />
+        </Box>
       )}
 
       <Grid
