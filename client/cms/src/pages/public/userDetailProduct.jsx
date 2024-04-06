@@ -2,23 +2,39 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Box, Container, Typography, CircularProgress, CardMedia } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  CircularProgress,
+  CardMedia,
+  Snackbar,
+} from "@mui/material";
 import { useParams } from "react-router-dom";
+import StarIcon from "@mui/icons-material/Star";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
 const UserDetailProduct = () => {
   const [productData, setProductData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [ratingToAdd, setRatingToAdd] = useState(0);
   const params = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const id = params.id;
-        const response = await axios.get(`http://localhost:3000/api/products/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        });
+        const response = await axios.get(
+          `http://localhost:3000/api/products/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
         setProductData(response.data);
         setLoading(false);
       } catch (error) {
@@ -36,24 +52,80 @@ const UserDetailProduct = () => {
     }));
   };
 
+  const handleRatingClick = (value) => {
+    setRatingToAdd(value);
+  };
+
+  const handleAddRating = async () => {
+    try {
+      const updatedRating = (productData.rating + ratingToAdd) / 2;
+      const updatedProductData = { ...productData, rating: updatedRating };
+      // Exclude _id from the update data
+      const { _id, ...updateDataWithoutId } = updatedProductData;
+      await axios.patch(
+        `http://localhost:3000/api/products/${productData._id}`,
+        updateDataWithoutId,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      setSnackbarMessage("Rating added successfully");
+      setSnackbarOpen(true);
+    } catch (error) {
+      console.error("Error adding rating:", error);
+      setSnackbarMessage("Failed to add rating");
+      setSnackbarOpen(true);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setSubmitting(true);
     try {
       const { _id, ...updateDataWithoutId } = productData;
-      await axios.patch(`http://localhost:3000/api/products/${_id}`, updateDataWithoutId, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
+      await axios.patch(
+        `http://localhost:3000/api/products/${_id}`,
+        updateDataWithoutId,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      setSubmitting(false);
+      setSnackbarMessage("Testimonial submitted successfully");
+      setSnackbarOpen(true);
     } catch (error) {
       console.error("Error submitting data:", error);
+      setSubmitting(false);
+      setSnackbarMessage("Failed to submit testimonial");
+      setSnackbarOpen(true);
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(price);
   };
 
   return (
     <Container maxWidth="md" sx={{ textAlign: "center", paddingTop: "100px" }}>
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}>
           <CircularProgress />
         </Box>
       ) : (
@@ -68,35 +140,50 @@ const UserDetailProduct = () => {
             <Typography variant="h4" fontWeight="semibold" gutterBottom>
               {productData.name}
             </Typography>
-            <Typography variant="body1">{productData.description}</Typography>
-            <Typography variant="body1" fontWeight="bold" gutterBottom>
-              Price: {productData.price}
+            <Typography variant="h5">{productData.description}</Typography>
+            <Typography variant="h5" fontWeight="bold" gutterBottom>
+              {formatPrice(productData.price)}
             </Typography>
-            <Typography variant="body1">Category: {productData.category}</Typography>
-            <Typography variant="body1">Stock: {productData.stock}</Typography>
-            <Typography variant="body1">Brand: {productData.brand}</Typography>
-            <Typography variant="body1">Rating: {productData.rating}</Typography>
-            <Box component="form" onSubmit={handleSubmit} mt={2}>
-              <TextField
-                onChange={handleChange}
-                id="testimonial"
-                label="Testimonial"
-                name="testimonial"
-                type="text"
-                fullWidth
-              />
+            <Typography variant="h5">
+              Category: {productData.category}
+            </Typography>
+            <Typography variant="h5">Stock: {productData.stock}</Typography>
+            <Typography variant="h5">Brand: {productData.brand}</Typography>
+            <Typography variant="h5">
+              Rating: {productData.rating}
+            </Typography>
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="h5" gutterBottom>
+                Add Rating:
+              </Typography>
+              {[1, 2, 3, 4, 5].map((value) => (
+                <StarIcon
+                  key={value}
+                  onClick={() => handleRatingClick(value)}
+                  color={value <= ratingToAdd ? "warning" : "action"}
+                />
+              ))}
               <Button
-                type="submit"
-                fullWidth
                 variant="contained"
-                sx={{ mt: 2, bgcolor: "primary.main", color: "white" }}
-              >
-                Submit
+                onClick={handleAddRating}
+                sx={{ ml: 2 }}>
+                Add Rating
               </Button>
             </Box>
           </Box>
         </Box>
       )}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+        action={
+          <Button color="inherit" size="small" onClick={handleCloseSnackbar}>
+            Close
+          </Button>
+        }
+      />
     </Container>
   );
 };

@@ -91,8 +91,10 @@ const UserProfile = () => {
             <CardMedia
               component="img"
               sx={{
-                maxWidth: isMobile ? "20%" : "30%", // Ubah persentase sesuai kebutuhan
-                height: "auto",
+                maxWidth: isMobile ? "20%" : "30%",
+                height: isMobile ? "60px" : "100%",
+                mt: isMobile ? 3 : 0,
+                pl: isMobile ? 3 : 0,
               }}
               image={userData.imgUrl}
               alt={userData.name}
@@ -109,7 +111,7 @@ const UserProfile = () => {
                   flexDirection: "column",
                   alignItems: "left",
                   textAlign: "left",
-                  ml: 0,
+                  ml: 2,
                   mt: 3,
                 }),
               }}>

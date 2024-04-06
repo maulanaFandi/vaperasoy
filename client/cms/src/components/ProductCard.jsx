@@ -63,6 +63,10 @@ export default function ProductCard() {
 
   const paginatedProducts = products.slice((page - 1) * 10, page * 10); // Get products for current page
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+  };
+
   return (
     <Grid
       container
@@ -114,7 +118,7 @@ export default function ProductCard() {
       {paginatedProducts.length > 0 ? (
         paginatedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
-            <Card sx={{ maxWidth: 345, mt: 3 }}>
+            <Card sx={{ maxWidth: 345 }}>
               <CardMedia
                 component="img"
                 alt="imageUrl"
@@ -128,6 +132,9 @@ export default function ProductCard() {
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {product.description}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {formatPrice(product.price)}
                 </Typography>
               </CardContent>
               <CardActions>

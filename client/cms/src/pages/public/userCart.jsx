@@ -29,6 +29,8 @@ export default function Cart() {
           Sorry, our developers are currently exhausted, and this page is still
           inaccessible.
         </Typography>
+      </Box>
+      <Box>
         <Typography
           variant="body1"
           sx={{
@@ -36,6 +38,7 @@ export default function Cart() {
             textAlign: "center",
             color: "#ffffff",
             position: "absolute",
+            mt: 10,
             top: "70%",
             left: "50%",
             transform: "translate(-50%, -50%)",
