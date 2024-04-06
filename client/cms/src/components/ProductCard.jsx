@@ -25,15 +25,15 @@ export default function ProductCard() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/products?page=${page}`,
+          `http://localhost:3000/api/products`, // Fetch all products
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             },
           }
         );
+        setTotalPages(Math.ceil(response.data.length / 10)); // Calculate total pages
         setProducts(response.data);
-        setTotalPages(Math.ceil(response.data.length / 10));
       } catch (error) {
         console.error(error);
         Swal.fire({
@@ -43,11 +43,13 @@ export default function ProductCard() {
       }
     };
     fetchData();
-  }, [page]); // Fetch data when page changes
+  }, []); // Fetch data only once when component mounts
 
   const handlePageChange = (event, value) => {
     setPage(value);
   };
+
+  const paginatedProducts = products.slice((page - 1) * 10, page * 10); // Get products for current page
 
   return (
     <Grid
@@ -62,9 +64,10 @@ export default function ProductCard() {
         flexDirection: "row",
         gap: 4,
         width: "100%",
-      }}>
-      {products && products.length > 0 ? (
-        products.map((product) => (
+      }}
+    >
+      {paginatedProducts.length > 0 ? (
+        paginatedProducts.map((product) => (
           <Card key={product._id} sx={{ maxWidth: 345, mt: 3 }}>
             <CardMedia
               component="img"
@@ -81,9 +84,9 @@ export default function ProductCard() {
               </Typography>
             </CardContent>
             <CardActions>
-            <Link to={`/products/${product._id}`}>
-              <Button size="small">View Detail</Button>
-            </Link>
+              <Link to={`/products/${product._id}`}>
+                <Button size="small">View Detail</Button>
+              </Link>
             </CardActions>
           </Card>
         ))
@@ -103,10 +106,11 @@ export default function ProductCard() {
           width: "100%",
           display: "flex",
           justifyContent: "center",
-        }}>
+        }}
+      >
         <Pagination
           page={page}
-          count={totalPages < 10 ? totalPages : 1}
+          count={totalPages}
           onChange={handlePageChange}
           renderItem={(item) => (
             <PaginationItem

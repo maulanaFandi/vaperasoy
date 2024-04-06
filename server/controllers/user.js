@@ -7,15 +7,8 @@ const client = new OAuth2Client();
 class UserController {
   static async register(req, res, next) {
     try {
-      const {
-        name,
-        email,
-        password,
-        birthDate,
-        phoneNumber,
-        gender,
-        address,
-      } = req.body;
+      const { name, email, password, birthDate, phoneNumber, gender, address } =
+        req.body;
 
       if (!name) {
         throw { name: "NameNotEmpty" };
@@ -23,6 +16,12 @@ class UserController {
 
       if (!email) {
         throw { name: "EmailNotEmpty" };
+      }
+
+      const user = await UserModel.findByEmail(email);
+
+      if (user) {
+        throw { name: "AlreadyExist" };
       }
 
       if (!password) {
@@ -193,21 +192,15 @@ class UserController {
   static async updateProfile(req, res, next) {
     try {
       const userEmail = req.user.email;
-  
+
       const userProfile = await UserModel.findByEmail(userEmail);
-  
+
       if (!userProfile) {
         return res.status(404).json({ message: "User profile not found" });
       }
-  
-      const {
-        birthDate,
-        phoneNumber,
-        gender,
-        IDNumber,
-        address,
-      } = req.body;
-  
+
+      const { birthDate, phoneNumber, gender, IDNumber, address } = req.body;
+
       // Buat objek baru yang berisi data yang diperbarui
       const updatedUserData = {
         birthDate,
@@ -216,17 +209,19 @@ class UserController {
         IDNumber,
         address,
       };
-  
+
       // Panggil metode updateProfile dari UserModel dengan id pengguna dan data yang diperbarui
-      const updatedUser = await UserModel.updateById(userProfile._id, updatedUserData);
-  
+      const updatedUser = await UserModel.updateById(
+        userProfile._id,
+        updatedUserData
+      );
+
       res.status(200).json(updatedUser);
     } catch (error) {
       console.log(error);
       next(error);
     }
   }
-  
 }
 
 module.exports = UserController;

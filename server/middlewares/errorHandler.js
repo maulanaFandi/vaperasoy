@@ -5,7 +5,7 @@ const errHandle = (err, req, res, next) => {
       res.status(400).json({ message: err.errors[0].message });
       break;
     case "EmailNotEmpty":
-      res.status(400).json({ message: "Email or Password Is Required" });
+      res.status(400).json({ message: "Email Is Required" });
       break;
     case "PasswordNotEmpty":
       res.status(400).json({ message: "Password Is Required" });

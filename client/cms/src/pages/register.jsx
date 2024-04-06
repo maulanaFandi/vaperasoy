@@ -20,6 +20,8 @@ import {
   Avatar,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const defaultTheme = createTheme();
 
@@ -36,6 +38,7 @@ export default function Register() {
     IDNumber: "",
     address: "",
   });
+  const [showPassword, setShowPassword] = useState(false); // State untuk menampilkan password
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,8 +48,25 @@ export default function Register() {
     }));
   };
 
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
+  const handleTogglePasswordConfirm = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.password !== formData.passwordConfirm) {
+      Swal.fire({
+        icon: "error",
+        text: "Password and password confirmation do not match!",
+      });
+      return;
+    }
+    
     try {
       const response = await axios.post(
         "http://localhost:3000/api/register",
@@ -135,7 +155,7 @@ export default function Register() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     name="password"
                     value={formData.password}
@@ -143,11 +163,26 @@ export default function Register() {
                     label="Password"
                     variant="outlined"
                     fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <Button
+                          onClick={handleTogglePassword}
+                          variant="text"
+                          color="inherit"
+                          size="small">
+                          {showPassword ? (
+                            <VisibilityOffIcon />
+                          ) : (
+                            <VisibilityIcon />
+                          )}
+                        </Button>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     id="passwordConfirm"
                     name="passwordConfirm"
                     value={formData.passwordConfirm}
@@ -155,6 +190,21 @@ export default function Register() {
                     label="Password Confirmation"
                     variant="outlined"
                     fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <Button
+                          onClick={handleTogglePasswordConfirm}
+                          variant="text"
+                          color="inherit"
+                          size="small">
+                          {showPassword ? (
+                            <VisibilityOffIcon />
+                          ) : (
+                            <VisibilityIcon />
+                          )}
+                        </Button>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
