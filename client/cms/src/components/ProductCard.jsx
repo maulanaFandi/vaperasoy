@@ -91,7 +91,7 @@ export default function ProductCard() {
         gap={2}
         mt={2}
         mb={2}>
-        <Grid item xs={12} sx={{ display: "flex", flexGrow: 1 }}>
+        <Grid item xs={12} md={6} sx={{ display: "flex", flexGrow: 1 }}>
           <TextField
             type="text"
             placeholder="Search..."
@@ -103,37 +103,40 @@ export default function ProductCard() {
             id="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            sx={{ minWidth: 120, ml: 2 }}>
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value="category1">Category 1</MenuItem>
-            <MenuItem value="category2">Category 2</MenuItem>
+            sx={{ minWidth: 120, height: 57, ml: 2, mt: 1 }}>
+            <MenuItem value="Liquid">Liquid</MenuItem>
+            <MenuItem value="Devices">Devices</MenuItem>
+            <MenuItem value="Accessories">Accessories</MenuItem>
             {/* Add more categories as needed */}
           </Select>
         </Grid>
       </Grid>
       {paginatedProducts.length > 0 ? (
         paginatedProducts.map((product) => (
-          <Card key={product._id} sx={{ maxWidth: 345, mt: 3 }}>
-            <CardMedia
-              component="img"
-              alt="imageUrl"
-              height="140"
-              image={product.imageUrl}
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {product.name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {product.description}
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Link to={`/products/${product._id}`}>
-                <Button size="small">View Detail</Button>
-              </Link>
-            </CardActions>
-          </Card>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
+            <Card sx={{ maxWidth: 345, mt: 3 }}>
+              <CardMedia
+                component="img"
+                alt="imageUrl"
+                maxheight="150"
+                maxwidth="150"
+                image={product.imageUrl}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {product.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {product.description}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Link to={`/products/${product._id}`}>
+                  <Button size="small">View Detail</Button>
+                </Link>
+              </CardActions>
+            </Card>
+          </Grid>
         ))
       ) : (
         <Typography variant="body1" gutterBottom>

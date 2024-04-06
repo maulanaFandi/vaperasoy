@@ -35,6 +35,7 @@ class ProductController {
         rating,
         testimony,
       } = req.body;
+        
       const result = await ProductModel.createProduct({
         name,
         description,
@@ -52,6 +53,7 @@ class ProductController {
       next(error);
     }
   }
+  
 
   static async updateProduct(req, res, next) {
     try {

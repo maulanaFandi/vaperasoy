@@ -12,6 +12,9 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import Carousel from 'react-material-ui-carousel';
 import { Card } from '@mui/material';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const tiers = [
   {
@@ -56,6 +59,25 @@ const tiers = [
 ];
 
 export default function Pricing() {
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/products',{
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        })
+        console.log(response.data);
+        setData(response.data)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    fetchData()
+  },[])
+  
   return (
     <Container
       id="pricing"

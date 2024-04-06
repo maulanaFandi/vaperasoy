@@ -203,12 +203,16 @@ export default function Products() {
       headerName: "Category",
       width: 180,
       editable: true,
+      type: "singleSelect",
+      valueOptions: ["Liquid", "Devices", "Accesories"],
     },
     {
       field: "stock",
       headerName: "Stock",
       type: "number",
       width: 180,
+      align: "left",
+      headerAlign: "left",
       editable: true,
     },
     {
@@ -222,12 +226,8 @@ export default function Products() {
       headerName: "Rating",
       type: "number",
       width: 180,
-      editable: true,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 180,
+      align: "left",
+      headerAlign: "left",
       editable: true,
     },
     {

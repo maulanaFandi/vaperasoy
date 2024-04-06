@@ -2,18 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import {
-  Box,
-  Container,
-  Typography,
-  CircularProgress,
-  Grid,
-  CardMedia,
-} from "@mui/material";
+import { Box, Container, Typography, CircularProgress, CardMedia } from "@mui/material";
 import { useParams } from "react-router-dom";
 
-const UserProfile = () => {
-  const [productData, setProductData] = useState([]);
+const UserDetailProduct = () => {
+  const [productData, setProductData] = useState(null);
   const [loading, setLoading] = useState(true);
   const params = useParams();
 
@@ -21,23 +14,19 @@ const UserProfile = () => {
     const fetchData = async () => {
       try {
         const id = params.id;
-        const response = await axios.get(
-          "http://localhost:3000/api/products/" + id,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          }
-        );
-        console.log(response.data);
+        const response = await axios.get(`http://localhost:3000/api/products/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
         setProductData(response.data);
         setLoading(false);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching product data:", error);
       }
     };
     fetchData();
-  }, []);
+  }, [params.id]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -47,139 +36,69 @@ const UserProfile = () => {
     }));
   };
 
-  const handleSubmit = async (newData) => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
-      const { _id, ...updateDataWithoutId } = newData;
-      await axios.patch(
-        "http://localhost:3000/api/products/" + _id,
-        updateDataWithoutId,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        }
-      );
-      return { ...newData, id: _id };
+      const { _id, ...updateDataWithoutId } = productData;
+      await axios.patch(`http://localhost:3000/api/products/${_id}`, updateDataWithoutId, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
     } catch (error) {
-      console.error(error);
+      console.error("Error submitting data:", error);
     }
   };
 
   return (
-    <>
+    <Container maxWidth="md" sx={{ textAlign: "center", paddingTop: "100px" }}>
       {loading ? (
-        <Grid
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "200px",
-          }}>
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
           <CircularProgress />
-        </Grid>
+        </Box>
       ) : (
-        <>
-          <Container
-            maxWidth="md"
-            sx={{ textAlign: "center", paddingTop: "100px" }}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100%", // Adjusted width for responsiveness
-                  maxWidth: "90%", // Added max width for better layout on larger screens
-                  boxShadow: 3,
-                  borderRadius: "16px",
-                  padding: "40px",
-                  border: "1px solid",
-                  ml: "auto", // Center align on larger screens
-                  mr: "auto", // Center align on larger screens
-                }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    flexDirection: "column",
-                  }}>
-                  <CardMedia
-                    component="img"
-                    sx={{ maxWidth: "30%", height: "auto" }} // Adjusted image size for responsiveness
-                    image={productData.imgUrl}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 2,
-                      textAlign: "left",
-                      fontSize: { xs: "0.5rem", sm: "1.5rem", md: "2rem" },
-                    }}>
-                    <Typography
-                      variant="h5"
-                      fontWeight="semibold"
-                      sx={{
-                        fontSize: ["0.5rem", "1.5rem", "2rem"], // Array of font sizes for different breakpoints
-                      }}>
-                      {productData.name}
-                    </Typography>
-                    <Typography variant="h5" fontWeight="semibold">
-                      {productData.description}
-                    </Typography>
-                    <Typography variant="h5" fontWeight="semibold">
-                      Gender: {productData.gender}
-                    </Typography>
-                    <Typography variant="h5" fontWeight="semibold">
-                      Birth Date: {productData.birthDate}
-                    </Typography>
-                    <Typography variant="h5" fontWeight="semibold">
-                      Age: {productData.birthDate}
-                    </Typography>
-                    <Typography variant="h5" fontWeight="semibold">
-                      Phone Number: {productData.phoneNumber}
-                    </Typography>
-                    <Typography variant="h5" fontWeight="semibold">
-                      Address: {productData.address}
-                    </Typography>
-                    {/* Add other user profile information here */}
-                  </Box>
-                  <Box component={"form"} onSubmit={handleSubmit}>
-                    <TextField
-                      onChange={handleChange}
-                      id="testimonial"
-                      label="Testimonial"
-                      name="testimonial"
-                      type="text"
-                      fullWidth
-                    />
-                    <Button
-                      type="submit"
-                      fullWidth
-                      sx={{
-                        mt: 3,
-                        mb: 2,
-                        backgroundColor: "green",
-                        color: "white",
-                        "&:hover": {
-                          backgroundColor: "green",
-                          color: "white",
-                        },
-                      }}>
-                      Submit
-                    </Button>
-                  </Box>
-                </Box>
-              </Box>
+        <Box>
+          <CardMedia
+            component="img"
+            sx={{ maxWidth: "100%", height: "auto" }}
+            image={productData.imageUrl}
+            alt={productData.name}
+          />
+          <Box sx={{ p: 2 }}>
+            <Typography variant="h4" fontWeight="semibold" gutterBottom>
+              {productData.name}
+            </Typography>
+            <Typography variant="body1">{productData.description}</Typography>
+            <Typography variant="body1" fontWeight="bold" gutterBottom>
+              Price: {productData.price}
+            </Typography>
+            <Typography variant="body1">Category: {productData.category}</Typography>
+            <Typography variant="body1">Stock: {productData.stock}</Typography>
+            <Typography variant="body1">Brand: {productData.brand}</Typography>
+            <Typography variant="body1">Rating: {productData.rating}</Typography>
+            <Box component="form" onSubmit={handleSubmit} mt={2}>
+              <TextField
+                onChange={handleChange}
+                id="testimonial"
+                label="Testimonial"
+                name="testimonial"
+                type="text"
+                fullWidth
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 2, bgcolor: "primary.main", color: "white" }}
+              >
+                Submit
+              </Button>
             </Box>
-          </Container>
-        </>
+          </Box>
+        </Box>
       )}
-    </>
+    </Container>
   );
 };
 
-export default UserProfile;
+export default UserDetailProduct;
