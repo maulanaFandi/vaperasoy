@@ -24,9 +24,29 @@ class ProductController {
 
   static async createProduct(req, res, next) {
     try {
-      const product = req.body;
-      const result = await ProductModel.createProduct(product);
-      res.status(200).json(result);
+      const {
+        name,
+        description,
+        price,
+        imageUrl,
+        category,
+        stock,
+        brand,
+        rating,
+        testimony,
+      } = req.body;
+      const result = await ProductModel.createProduct({
+        name,
+        description,
+        price,
+        imageUrl,
+        category,
+        stock,
+        brand,
+        rating,
+        testimony,
+      });
+      res.status(201).json(result);
     } catch (error) {
       console.log(error);
       next(error);
@@ -62,7 +82,6 @@ class ProductController {
       const product = req.body;
       const result = await ProductModel.updateProduct(id, product);
       res.status(200).json(result);
-      
     } catch (error) {
       console.log(error);
       next(error);

@@ -19,12 +19,12 @@ export default function AddProductForm() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
-    birthDate: "",
-    phoneNumber: "",
-    gender: "",
-    IDNumber: "",
-    address: "",
+    description: "",
+    price: 0,
+    imageUrl: "",
+    category: "",
+    stock: 0,
+    brand: "",
   });
 
   const handleChange = (e) => {
@@ -38,15 +38,11 @@ export default function AddProductForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "http://localhost:3000/api/products",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        }
-      );
+      await axios.post("http://localhost:3000/api/products", formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
       Swal.fire({
         icon: "success",
         text: "Add Product successful!",
@@ -75,7 +71,7 @@ export default function AddProductForm() {
           </Typography>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   type="text"
                   id="name"
@@ -89,102 +85,82 @@ export default function AddProductForm() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
+                  type="number"
+                  id="stock"
+                  name="stock"
+                  value={formData.stock}
                   onChange={handleChange}
-                  label="Email"
-                  variant="outlined"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  label="Password"
-                  variant="outlined"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  type="password"
-                  id="passwordConfirm"
-                  name="passwordConfirm"
-                  value={formData.passwordConfirm}
-                  onChange={handleChange}
-                  label="Password Confirmation"
+                  label="Stock"
                   variant="outlined"
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  type="date"
-                  id="age"
-                  name="birthDate"
-                  value={formData.birthDate}
+                  type="number"
+                  id="price"
+                  name="price"
+                  value={formData.price}
                   onChange={handleChange}
+                  label="Price"
                   variant="outlined"
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
-                  type="tel"
-                  id="phone"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
+                  type="text"
+                  id="imageUrl"
+                  name="imageUrl"
+                  value={formData.imageUrl}
                   onChange={handleChange}
-                  label="Phone Number"
+                  label="Image Url"
                   variant="outlined"
                   fullWidth
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel id="gender-label">Gender</InputLabel>
+                  <InputLabel id="category-label">Category</InputLabel>
                   <Select
-                    labelId="gender-label"
-                    id="gender"
-                    name="gender"
-                    value={formData.gender}
+                    labelId="category-label"
+                    id="category"
+                    name="category"
+                    value={formData.category}
                     onChange={handleChange}
-                    label="Gender"
+                    label="Category"
                     variant="outlined"
                     fullWidth>
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    <MenuItem value="male">Male</MenuItem>
-                    <MenuItem value="female">Female</MenuItem>
+                    <MenuItem value="Liquid">Liquid</MenuItem>
+                    <MenuItem value="Device">Device</MenuItem>
+                    <MenuItem value="Accessories">Accessories</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   type="text"
-                  id="nik"
-                  name="IDNumber"
-                  value={formData.IDNumber}
+                  id="brand"
+                  name="brand"
+                  value={formData.brand}
                   onChange={handleChange}
-                  label="NIK"
+                  label="brand"
                   variant="outlined"
                   fullWidth
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <TextareaAutosize
-                  id="address"
-                  name="address"
-                  value={formData.address}
+                  id="description"
+                  name="description"
+                  value={formData.description}
                   onChange={handleChange}
-                  placeholder="Address"
+                  placeholder="Description"
                   style={{ width: "100%", minHeight: 100 }}
                 />
               </Grid>
