@@ -5,7 +5,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';import {
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import {
   DataGrid,
   GridActionsCellItem,
   GridRowModes,
@@ -17,7 +18,6 @@ import Swal from "sweetalert2";
 export default function Products() {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
-  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,7 +108,7 @@ export default function Products() {
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
-        text: `You are about to delete the staff member with ID ${id}`,
+        text: `You are about to delete Product with ID ${id}`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, delete it!",
@@ -125,14 +125,14 @@ export default function Products() {
         setRows((prevRows) => prevRows.filter((row) => row.id !== id));
         Swal.fire({
           title: "Deleted!",
-          text: `The staff member with ID ${id} has been deleted.`,
+          text: `Product with ID ${id} has been deleted.`,
           icon: "success",
           confirmButtonText: "OK",
         });
       } else {
         Swal.fire({
           title: "Cancelled",
-          text: `The staff member with ID ${id} was not deleted.`,
+          text: `Product with ID ${id} was not deleted.`,
           icon: "error",
           confirmButtonText: "OK",
         });
@@ -161,7 +161,6 @@ export default function Products() {
     }
   };
 
-
   const processRowUpdate = async (newRow) => {
     try {
       const { _id, ...updateDataWithoutId } = newRow;
@@ -183,48 +182,74 @@ export default function Products() {
   };
 
   const handlePurchaseClick = async (id) => {
-    // Open modal to input quantity and select payment method
     const { value: formValues } = await Swal.fire({
-      title: 'Purchase Product',
+      title: "Purchase Product",
       html:
-        '<input id="swal-input-quantity" class="swal2-input" placeholder="Quantity">' +
+        '<input id="swal-input-quantity" type="number" class="swal2-input" placeholder="Quantity">' +
         '<select id="swal-select-payment" class="swal2-select">' +
         '<option value="Cash">Cash</option>' +
         '<option value="Debit">Debit</option>' +
         '<option value="Credit">Credit</option>' +
         '<option value="QRIS">QRIS</option>' +
-        '</select>',
+        "</select>",
       focusConfirm: false,
       preConfirm: () => {
-        return [
-          document.getElementById('swal-input-quantity').value,
-          document.getElementById('swal-select-payment').value
-        ]
-      }
+        const quantity = parseInt(
+          document.getElementById("swal-input-quantity").value
+        );
+        const paymentMethod = document.getElementById(
+          "swal-select-payment"
+        ).value;
+
+        if (isNaN(quantity) || quantity <= 0) {
+          Swal.showValidationMessage(
+            "Please enter a valid quantity greater than 0"
+          );
+          return false;
+        }
+
+        return [quantity, paymentMethod];
+      },
     });
-  
+
+    if (!formValues) {
+      return; // Exit function if no valid formValues
+    }
+
     const [quantity, paymentMethod] = formValues;
-  
-    if (quantity && paymentMethod) {
-      try {
+
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: `You are about to purchase Product with ID ${id}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, purchase it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      });
+
+      if (result.isConfirmed) {
         // Check if product exists and if its stock is greater than zero
         const product = rows.find((row) => row.id === id);
         if (!product) {
-          throw new Error('Product not found.');
+          throw new Error("Product not found.");
         }
         if (product.stock < quantity) {
-          throw new Error('Not enough stock.');
+          throw new Error("Not enough stock.");
         }
+
         // Proceed with purchase
         await axios.post(
           `http://localhost:3000/api/products/${id}/purchases`,
           { quantity, paymentMethod },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             },
           }
         );
+
         // Update the stock locally after a successful purchase
         const updatedRows = rows.map((row) => {
           if (row.id === id) {
@@ -235,23 +260,31 @@ export default function Products() {
           }
           return row;
         });
+
         setRows(updatedRows);
         Swal.fire({
-          title: 'Success',
-          text: 'Product has been purchased.',
-          icon: 'success',
-          confirmButtonText: 'OK',
+          title: "Success",
+          text: "Product has been purchased.",
+          icon: "success",
+          confirmButtonText: "OK",
         });
-      } catch (error) {
+      } else {
         Swal.fire({
-          title: 'Error',
-          text: `Failed to purchase product: ${error.message}`,
-          icon: 'error',
-          confirmButtonText: 'OK',
+          title: "Cancelled",
+          text: `Product with ID ${id} was not Add To Purchase.`,
+          icon: "error",
+          confirmButtonText: "OK",
         });
       }
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: `Failed to purchase product: ${error.message}`,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
-  };  
+  };
 
   const columns = [
     { field: "_id", headerName: "ID", width: 200 },
@@ -338,7 +371,8 @@ export default function Products() {
             color="primary"
             icon={<EditIcon />}
             label="Edit"
-            onClick={() => handleEditClick(id)}/>,
+            onClick={() => handleEditClick(id)}
+          />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
@@ -346,11 +380,11 @@ export default function Products() {
             color="error"
           />,
           <GridActionsCellItem
-          icon={<ShoppingCartIcon />}
-          label="Purchase"
-          onClick={() => handlePurchaseClick(id)}
-          color="warning"
-        />,
+            icon={<ShoppingCartIcon />}
+            label="Purchase"
+            onClick={() => handlePurchaseClick(id)}
+            color="warning"
+          />,
         ];
       },
     },
