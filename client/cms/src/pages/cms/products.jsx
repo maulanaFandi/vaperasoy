@@ -184,28 +184,57 @@ export default function Products() {
 
   const quantity = 1
   const handlePurchaseClick = async (id, quantity) => {
-    try {
-      await axios.post(`http://localhost:3000/api/products/${id}/purchases`,{quantity},{
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      })
+    const product = rows.find(row => row.id === id);
+  
+    // Check if product exists and if its stock is greater than zero
+    if (product && product.stock > 0) {
+      try {
+        const response = await axios.post(`http://localhost:3000/api/products/${id}/purchases`, { quantity }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
+  
+        // Update the stock locally after a successful purchase
+        const updatedRows = rows.map(row => {
+          if (row._id === id) {
+            return {
+              ...row,
+              stock: row.stock - quantity, // Deduct purchased quantity from stock
+            };
+          }
+          return row;
+        });
+  
+        setRows(updatedRows);
+  
+        Swal.fire({
+          title: "Success",
+          text: "Product has been purchased.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      } catch (error) {
+        console.log(error);
+        Swal.fire({
+          title: "Error",
+          text: "Failed to purchase product. Please try again later.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    } else {
+      // Show a message indicating the product is out of stock
       Swal.fire({
-        title: "Success",
-        text: "Product has been purchased.",
-        icon: "success",
-        confirmButtonText: "OK",
-      })
-    } catch (error) {
-      console.log(error);
-      Swal.fire({
-        title: "Error",
-        text: "Failed to purchase product. Please try again later.",
+        title: "Out of Stock",
+        text: "This product is currently out of stock.",
         icon: "error",
         confirmButtonText: "OK",
-      })
+      });
     }
-  }
+  };
+  
+  
 
   const columns = [
     { field: "_id", headerName: "ID", width: 200 },
