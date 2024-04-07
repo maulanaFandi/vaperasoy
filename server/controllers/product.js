@@ -1,4 +1,5 @@
 const ProductModel = require("../models/product");
+const PurchaseModel = require("../models/purchase");
 
 class ProductController {
   static async getAllProducts(req, res, next) {
@@ -34,7 +35,7 @@ class ProductController {
         brand,
         rating,
       } = req.body;
-        
+
       const result = await ProductModel.createProduct({
         name,
         description,
@@ -51,7 +52,6 @@ class ProductController {
       next(error);
     }
   }
-  
 
   static async updateProduct(req, res, next) {
     try {
@@ -81,6 +81,49 @@ class ProductController {
       const id = req.params.id;
       const product = req.body;
       const result = await ProductModel.updateProduct(id, product);
+      res.status(200).json(result);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  //purchase
+  static async createPurchase(req, res, next) {
+    try {
+      const productId = req.params.id;
+      const quantity = 1;
+
+      // Dapatkan informasi produk dari database
+      const product = await ProductModel.getProductById(productId);
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      // Periksa apakah stok mencukupi untuk pembelian
+      if (product.stock < quantity) {
+        return res.status(400).json({ message: "Insufficient stock" });
+      }
+
+      const price = product.price;
+
+      // Lakukan pembelian produk
+      await PurchaseModel.createPurchase(productId, quantity, price);
+
+      // Kurangi stok produk
+      product.stock -= quantity;
+      await ProductModel.updateProduct(productId, product);
+
+      res.status(200).json({ message: "Purchase successful" });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+
+  static async getAllPurchases(req, res, next) {
+    try {
+      const result = await ProductModel.getAllPurchases();
       res.status(200).json(result);
     } catch (error) {
       console.log(error);

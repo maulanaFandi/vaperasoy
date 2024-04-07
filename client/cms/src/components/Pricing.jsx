@@ -25,7 +25,6 @@ export default function Pricing() {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/public/products')
-        console.log(response.data);
         const randomData = response.data.sort(() => Math.random() - 0.5).slice(0, 5)
         setData(randomData)
       } catch (error) {

@@ -5,13 +5,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
-import {
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';import {
   DataGrid,
   GridActionsCellItem,
   GridRowModes,
   GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import Swal from "sweetalert2";
 
 export default function Products() {
@@ -31,6 +31,7 @@ export default function Products() {
           id: row._id,
           isNew: false,
         }));
+        console.log(formattedData);
         setRows(formattedData);
 
         const initialRowModesModel = {};
@@ -180,6 +181,32 @@ export default function Products() {
     }
   };
 
+
+  const quantity = 1
+  const handlePurchaseClick = async (id, quantity) => {
+    try {
+      await axios.post(`http://localhost:3000/api/products/${id}/purchases`,{quantity},{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      })
+      Swal.fire({
+        title: "Success",
+        text: "Product has been purchased.",
+        icon: "success",
+        confirmButtonText: "OK",
+      })
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        title: "Error",
+        text: "Failed to purchase product. Please try again later.",
+        icon: "error",
+        confirmButtonText: "OK",
+      })
+    }
+  }
+
   const columns = [
     { field: "_id", headerName: "ID", width: 200 },
     { field: "name", headerName: "Name", width: 180, editable: true },
@@ -261,19 +288,23 @@ export default function Products() {
         }
 
         return [
-          <Button
-            key="edit"
+          <GridActionsCellItem
             color="primary"
-            size="small"
-            startIcon={<EditIcon />}
-            onClick={() => handleEditClick(id)}
-            sx={{ mr: 1 }}></Button>,
+            icon={<EditIcon />}
+            label="Edit"
+            onClick={() => handleEditClick(id)}/>,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => handleDeleteClick(id)}
             color="error"
           />,
+          <GridActionsCellItem
+          icon={<ShoppingCartIcon />}
+          label="Purchase"
+          onClick={() => handlePurchaseClick(id)}
+          color="warning"
+        />,
         ];
       },
     },
