@@ -2,57 +2,15 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
+import Avatar from "@mui/material/Avatar"; // Import Avatar component
+import Swal from "sweetalert2";
+import axios from "axios";
 import { useTheme } from "@mui/system";
-
-const userTestimonials = [
-  {
-    avatar: <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />,
-    name: "Remy Sharp",
-    occupation: "Senior Engineer",
-    testimonial:
-      "I absolutely love how versatile this product is! Whether I'm tackling work projects or indulging in my favorite hobbies, it seamlessly adapts to my changing needs. Its intuitive design has truly enhanced my daily routine, making tasks more efficient and enjoyable.",
-  },
-  {
-    avatar: <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />,
-    name: "Travis Howard",
-    occupation: "Lead Product Designer",
-    testimonial:
-      "One of the standout features of this product is the exceptional customer support. In my experience, the team behind this product has been quick to respond and incredibly helpful. It's reassuring to know that they stand firmly behind their product.",
-  },
-  {
-    avatar: <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />,
-    name: "Cindy Baker",
-    occupation: "CTO",
-    testimonial:
-      "The level of simplicity and user-friendliness in this product has significantly simplified my life. I appreciate the creators for delivering a solution that not only meets but exceeds user expectations.",
-  },
-  {
-    avatar: <Avatar alt="Remy Sharp" src="/static/images/avatar/4.jpg" />,
-    name: "Julia Stewart",
-    occupation: "Senior Engineer",
-    testimonial:
-      "I appreciate the attention to detail in the design of this product. The small touches make a big difference, and it's evident that the creators focused on delivering a premium experience.",
-  },
-  {
-    avatar: <Avatar alt="Travis Howard" src="/static/images/avatar/5.jpg" />,
-    name: "John Smith",
-    occupation: "Product Designer",
-    testimonial:
-      "I've tried other similar products, but this one stands out for its innovative features. It's clear that the makers put a lot of thought into creating a solution that truly addresses user needs.",
-  },
-  {
-    avatar: <Avatar alt="Cindy Baker" src="/static/images/avatar/6.jpg" />,
-    name: "Daniel Wolf",
-    occupation: "CDO",
-    testimonial:
-      "The quality of this product exceeded my expectations. It's durable, well-designed, and built to last. Definitely worth the investment!",
-  },
-];
+import { useState, useEffect } from "react";
 
 const logoStyle = {
   width: "64px",
@@ -61,6 +19,34 @@ const logoStyle = {
 
 export default function Testimonials() {
   const theme = useTheme();
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/public/users"
+        );
+        console.log(response.data);
+        // Filter out data with role "admin"
+        const filteredData = response.data.filter(
+          (user) => user.role !== "admin"
+        );
+
+        // Shuffle the filtered data
+        const shuffledData = filteredData.sort(() => Math.random() - 0.5);
+
+        // Limit the data to 6 entries
+        const limitedData = shuffledData.slice(0, 6);
+
+        setData(limitedData);
+      } catch (error) {
+        console.log(error);
+        Swal.fire;
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <Container
@@ -89,8 +75,14 @@ export default function Testimonials() {
         </Typography>
       </Box>
       <Grid container spacing={2}>
-        {userTestimonials.map((testimonial, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index} sx={{ display: "flex" }}>
+        {data.map((result) => (
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            key={result._id}
+            sx={{ display: "flex" }}>
             <Card
               sx={{
                 display: "flex",
@@ -101,7 +93,7 @@ export default function Testimonials() {
               }}>
               <CardContent>
                 <Typography variant="body2" color="text.secondary">
-                  {testimonial.testimonial}
+                  {result.testimony}
                 </Typography>
               </CardContent>
               <Box
@@ -111,10 +103,10 @@ export default function Testimonials() {
                   justifyContent: "space-between",
                   pr: 2,
                 }}>
+                {/* Displaying the image as Avatar */}
                 <CardHeader
-                  avatar={testimonial.avatar}
-                  title={testimonial.name}
-                  subheader={testimonial.occupation}
+                  avatar={<Avatar src={result.imgUrl} />} // Using Avatar component
+                  title={result.name}
                 />
               </Box>
             </Card>
