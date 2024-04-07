@@ -7,7 +7,7 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
+import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -26,23 +26,22 @@ export default function Footer() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    // Batasi input testimony maksimum 250 karakter
+    const truncatedValue = value.slice(0, 250);
     setInput((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: truncatedValue,
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
     try {
-      await axios.patch(
-        `http://localhost:3000/api/users/testimony`,
-        input,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        }
-      );
+      await axios.patch("http://localhost:3000/api/users/testimony", input, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
       Swal.fire({
         icon: "success",
         title: "Success",
@@ -131,34 +130,52 @@ export default function Footer() {
             </Link>
           </Box>
         </Box>
+        {localStorage.getItem("access_token") && (
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{
+              display: { xs: "50%", sm: "flex" },
+              flexDirection: "column",
+              gap: 1,
+            }}>
+            <Stack direction="row" spacing={1} alignItems="flex-end" useFlexGap>
+              <TextareaAutosize
+                id="outlined-basic"
+                aria-label="empty textarea"
+                minRows={5} // Mengatur jumlah baris minimum untuk memperbesar area
+                placeholder="Enter Your Testimony (Max. 250 characters)"
+                name="testimony"
+                onChange={handleChange}
+                sx={{
+                  resize: "none",
+                  width: "100%", // Menyesuaikan lebar dengan kontainer
+                  padding: 2, // Menambahkan ruang tambahan di sekitar teks
+                  fontSize: "1rem", // Menyesuaikan ukuran teks
+                  borderRadius: 4, // Memberikan sudut bulat
+                  border: "1px solid #ccc", // Memberikan border agar tampak lebih jelas
+                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Menambahkan bayangan untuk efek depth
+                  transition:
+                    "border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out", // Animasi saat hover
+                  "&:focus": {
+                    outline: "none", // Menghapus outline saat fokus
+                    borderColor: "#007bff", // Mengubah warna border saat fokus
+                    boxShadow: "0 4px 8px rgba(0, 123, 255, 0.2)", // Efek bayangan saat fokus
+                  },
+                }}
+                value={input.testimony}
+              />
 
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{
-            display: { xs: "none", sm: "flex" },
-            flexDirection: "column",
-            gap: 1,
-          }}>
-          <Stack direction="row" spacing={1} useFlexGap>
-            <TextField
-              id="outlined-basic"
-              size="small"
-              variant="outlined"
-              fullWidth
-              placeholder="Enter your testimony"
-              name="testimony"
-              onChange={handleChange}
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{ flexShrink: 0 }}>
-              Submit
-            </Button>
-          </Stack>
-        </Box>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{ flexShrink: 0 }}>
+                Submit
+              </Button>
+            </Stack>
+          </Box>
+        )}
       </Box>
     </Container>
   );

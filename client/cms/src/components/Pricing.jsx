@@ -15,48 +15,8 @@ import { Card } from '@mui/material';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
-
-const tiers = [
-  {
-    title: 'Free',
-    price: '0',
-    description: [
-      '10 users included',
-      '2 GB of storage',
-      'Help center access',
-      'Email support',
-    ],
-    buttonText: 'Sign up for free',
-    buttonVariant: 'outlined',
-  },
-  {
-    title: 'Professional',
-    subheader: 'Recommended',
-    price: '15',
-    description: [
-      '20 users included',
-      '10 GB of storage',
-      'Help center access',
-      'Priority email support',
-      'Dedicated team',
-      'Best deals',
-    ],
-    buttonText: 'Start now',
-    buttonVariant: 'contained',
-  },
-  {
-    title: 'Enterprise',
-    price: '30',
-    description: [
-      '50 users included',
-      '30 GB of storage',
-      'Help center access',
-      'Phone & email support',
-    ],
-    buttonText: 'Contact us',
-    buttonVariant: 'outlined',
-  },
-];
+import CardMedia from "@mui/material/CardMedia";
+import { Link } from 'react-router-dom';
 
 export default function Pricing() {
   const [data, setData] = useState([])
@@ -64,13 +24,10 @@ export default function Pricing() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/products',{
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        })
+        const response = await axios.get('http://localhost:3000/api/public/products')
         console.log(response.data);
-        setData(response.data)
+        const randomData = response.data.sort(() => Math.random() - 0.5).slice(0, 5)
+        setData(randomData)
       } catch (error) {
         console.error(error)
       }
@@ -78,6 +35,9 @@ export default function Pricing() {
     fetchData()
   },[])
   
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+  };
   return (
     <Container
       id="pricing"
@@ -124,128 +84,41 @@ export default function Pricing() {
         }}
         sx={{
           width: '100%',
-          maxWidth: '500px', // Max width to prevent too much stretching
+          maxWidth: '300px', // Max width to prevent too much stretching
           marginX: 'auto', // Center the carousel
         }}
       >
-        {tiers.map((tier) => (
+        {data.map((result) => (
           <Grid
-            key={tier.title}
+            key={result._id}
             item
             xs={12}
-            sm={tier.title === 'Enterprise' ? 12 : 6}
+            sm={result.title}
             md={4}
           >
-            <Card
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 4,
-                border: tier.title === 'Professional' ? '1px solid' : undefined,
-                borderColor:
-                  tier.title === 'Professional' ? 'primary.main' : undefined,
-                background:
-                  tier.title === 'Professional'
-                    ? 'linear-gradient(#033363, #021F3B)'
-                    : undefined,
-              }}
-            >
+            <Card sx={{ maxWidth: 345, alignItems: "center", justifyContent: "center", display: "flex", flexDirection: "column" }}>
+              <CardMedia
+                component="img"
+                alt="imageUrl"
+                maxheight="150"
+                maxwidth="150"
+                image={result.imageUrl}
+              />
               <CardContent>
-                <Box
-                  sx={{
-                    mb: 1,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    color: tier.title === 'Professional' ? 'grey.100' : '',
-                  }}
-                >
-                  <Typography component="h3" variant="h6">
-                    {tier.title}
-                  </Typography>
-                  {tier.title === 'Professional' && (
-                    <Chip
-                      icon={<AutoAwesomeIcon />}
-                      label={tier.subheader}
-                      size="small"
-                      sx={{
-                        background: (theme) =>
-                          theme.palette.mode === 'light' ? '' : 'none',
-                        backgroundColor: 'primary.contrastText',
-                        '& .MuiChip-label': {
-                          color: 'primary.dark',
-                        },
-                        '& .MuiChip-icon': {
-                          color: 'primary.dark',
-                        },
-                      }}
-                    />
-                  )}
-                </Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'baseline',
-                    color: tier.title === 'Professional' ? 'grey.50' : undefined,
-                  }}
-                >
-                  <Typography component="h3" variant="h2">
-                    ${tier.price}
-                  </Typography>
-                  <Typography component="h3" variant="h6">
-                    &nbsp; per month
-                  </Typography>
-                </Box>
-                <Divider
-                  sx={{
-                    my: 2,
-                    opacity: 0.2,
-                    borderColor: 'grey.500',
-                  }}
-                />
-                {tier.description.map((line) => (
-                  <Box
-                    key={line}
-                    sx={{
-                      py: 1,
-                      display: 'flex',
-                      gap: 1.5,
-                      alignItems: 'center',
-                    }}
-                  >
-                    <CheckCircleRoundedIcon
-                      sx={{
-                        width: 20,
-                        color:
-                          tier.title === 'Professional'
-                            ? 'primary.light'
-                            : 'primary.main',
-                      }}
-                    />
-                    <Typography
-                      component="text"
-                      variant="subtitle2"
-                      sx={{
-                        color:
-                          tier.title === 'Professional' ? 'grey.200' : undefined,
-                      }}
-                    >
-                      {line}
-                    </Typography>
-                  </Box>
-                ))}
+                <Typography gutterBottom variant="h5" component="div">
+                  {result.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {result.description}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {formatPrice(result.price)}
+                </Typography>
               </CardContent>
               <CardActions>
-                <Button
-                  fullWidth
-                  variant={tier.buttonVariant}
-                  component="a"
-                  href="/material-ui/getting-started/templates/checkout/"
-                  target="_blank"
-                >
-                  {tier.buttonText}
-                </Button>
+                <Link to={`/login`}>
+                  <Button size="small">View Detail</Button>
+                </Link>
               </CardActions>
             </Card>
           </Grid>

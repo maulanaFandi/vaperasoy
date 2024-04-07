@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Avatar from "@mui/material/Avatar"; // Import Avatar component
+import Avatar from "@mui/material/Avatar";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useTheme } from "@mui/system";
@@ -27,7 +27,6 @@ export default function Testimonials() {
         const response = await axios.get(
           "http://localhost:3000/api/public/users"
         );
-        console.log(response.data);
         // Filter out data with role "admin"
         const filteredData = response.data.filter(
           (user) => user.role !== "admin"
