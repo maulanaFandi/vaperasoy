@@ -7,7 +7,7 @@ const client = new OAuth2Client();
 class UserController {
   static async register(req, res, next) {
     try {
-      const { name, email, password, birthDate, phoneNumber, gender, address } =
+      const { name, email, password, birthDate, phoneNumber, gender, address, testimony } =
         req.body;
 
       if (!name) {
@@ -52,6 +52,7 @@ class UserController {
         phoneNumber,
         gender,
         address,
+        testimony,
       };
 
       await UserModel.insertUserWithDefaultRole(newUser);
@@ -154,7 +155,7 @@ class UserController {
   static async updateUser(req, res, next) {
     try {
       const id = req.params.id;
-      const result = await UserModel.updateById(id, req.body);
+      await UserModel.updateById(id, req.body);
     } catch (error) {
       console.log(error);
       next(error);
@@ -199,21 +200,52 @@ class UserController {
         return res.status(404).json({ message: "User profile not found" });
       }
 
-      const { birthDate, phoneNumber, gender, IDNumber, address } = req.body;
+      const { birthDate, phoneNumber, gender, address, testimony } = req.body;
 
       // Buat objek baru yang berisi data yang diperbarui
       const updatedUserData = {
         birthDate,
         phoneNumber,
         gender,
-        IDNumber,
         address,
+        testimony
       };
 
       // Panggil metode updateProfile dari UserModel dengan id pengguna dan data yang diperbarui
       const updatedUser = await UserModel.updateById(
         userProfile._id,
         updatedUserData
+      );
+
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  static async updateTestimony(req, res, next) {
+    try {
+      const userEmail = req.user.email;
+
+      const userProfile = await UserModel.findByEmail(userEmail);
+
+      if (!userProfile) {
+        return res.status(404).json({ message: "User profile not found" });
+      }
+
+      // const {testimony } = req.body;
+
+      // // Buat objek baru yang berisi data yang diperbarui
+      // const updatedUserData = {
+      //   testimony
+      // };
+
+      // Panggil metode updateProfile dari UserModel dengan id pengguna dan data yang diperbarui
+      const updatedUser = await UserModel.updateById(
+        userProfile._id,
+        // 
+        req.body
       );
 
       res.status(200).json(updatedUser);

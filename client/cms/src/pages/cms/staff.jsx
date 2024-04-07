@@ -79,7 +79,6 @@ export default function Staff() {
           }));
         } else {
           console.error("Row with ID", id, "not found.");
-          // Handle the case when row with given ID is not found
         }
       } else {
         Swal.fire({

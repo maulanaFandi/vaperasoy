@@ -8,6 +8,8 @@ router.get('/users/profile', User.getProfile)
 
 router.put('/users/profile', User.updateProfile)
 
+router.patch('/users/testimony', User.updateTestimony)
+
 router.get('/users/:id', User.getUserById)
 
 router.delete('/users/:id', User.deleteUser)

@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
-import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
 const UserDetailProduct = () => {
   const [productData, setProductData] = useState(null);
@@ -132,7 +131,7 @@ const UserDetailProduct = () => {
         <Box>
           <CardMedia
             component="img"
-            sx={{ maxWidth: "100%", height: "auto" }}
+            sx={{ maxWidth: "70%", height: "80%", margin: "auto" }}
             image={productData.imageUrl}
             alt={productData.name}
           />
@@ -144,14 +143,15 @@ const UserDetailProduct = () => {
             <Typography variant="h5" fontWeight="bold" gutterBottom>
               {formatPrice(productData.price)}
             </Typography>
+
+            <Box sx={{ display: "flex", flexDirection: "row",mt: 2, alignItems: "center", justifyContent: "center" }}>
             <Typography variant="h5">
-              Category: {productData.category}
+              Category: {productData.category} |
             </Typography>
-            <Typography variant="h5">Stock: {productData.stock}</Typography>
-            <Typography variant="h5">Brand: {productData.brand}</Typography>
-            <Typography variant="h5">
-              Rating: {productData.rating}
-            </Typography>
+            <Typography ml={2} variant="h5">Stock: {productData.stock} |</Typography>
+            <Typography ml={2} variant="h5">Brand: {productData.brand} </Typography>
+            </Box>
+            <Typography mt={2} variant="h5">Rating: {productData.rating}</Typography>
             <Box sx={{ mt: 2 }}>
               <Typography variant="h5" gutterBottom>
                 Add Rating:
