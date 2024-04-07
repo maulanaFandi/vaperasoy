@@ -125,7 +125,7 @@ class ProductController {
 
   static async getAllPurchases(req, res, next) {
     try {
-      const result = await ProductModel.getAllPurchases();
+      const result = await PurchaseModel.getAllPurchases();
       res.status(200).json(result);
     } catch (error) {
       console.log(error);

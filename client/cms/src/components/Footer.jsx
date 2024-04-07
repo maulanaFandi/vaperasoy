@@ -6,13 +6,12 @@ import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import Stack from "@mui/material/Stack";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import TextField from "@mui/material/TextField";
 
 const logoStyle = {
   width: "140px",
@@ -135,45 +134,44 @@ export default function Footer() {
             component="form"
             onSubmit={handleSubmit}
             sx={{
-              display: { xs: "50%", sm: "flex" },
+              display: "flex",
               flexDirection: "column",
-              gap: 1,
+              alignItems: "center",
+              width: "100%",
+              padding: "20px",
             }}>
-            <Stack direction="row" spacing={1} alignItems="flex-end" useFlexGap>
-              <TextareaAutosize
-                id="outlined-basic"
-                aria-label="empty textarea"
-                minRows={5} // Mengatur jumlah baris minimum untuk memperbesar area
-                placeholder="Enter Your Testimony (Max. 250 characters)"
-                name="testimony"
-                onChange={handleChange}
-                sx={{
-                  resize: "none",
-                  width: "100%", // Menyesuaikan lebar dengan kontainer
-                  padding: 2, // Menambahkan ruang tambahan di sekitar teks
-                  fontSize: "1rem", // Menyesuaikan ukuran teks
-                  borderRadius: 4, // Memberikan sudut bulat
-                  border: "1px solid #ccc", // Memberikan border agar tampak lebih jelas
-                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Menambahkan bayangan untuk efek depth
-                  transition:
-                    "border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out", // Animasi saat hover
-                  "&:focus": {
-                    outline: "none", // Menghapus outline saat fokus
-                    borderColor: "#007bff", // Mengubah warna border saat fokus
-                    boxShadow: "0 4px 8px rgba(0, 123, 255, 0.2)", // Efek bayangan saat fokus
-                  },
-                }}
-                value={input.testimony}
-              />
+            <TextField
+              id="outlined-basic"
+              multiline
+              minRows={5}
+              maxRows={10}
+              placeholder="Enter Your Testimony (Max. 250 characters)"
+              name="testimony"
+              onChange={handleChange}
+              sx={{
+                width: "100%",
+                maxWidth: "600px", // Menyesuaikan lebar maksimum textarea
+                marginBottom: "10px",
+              }}
+              value={input.testimony}
+              variant="outlined"
+            />
 
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                sx={{ flexShrink: 0 }}>
-                Submit
-              </Button>
-            </Stack>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{
+                width: "100%",
+                maxWidth: "600px", // Menyesuaikan lebar maksimum tombol dengan textarea
+                backgroundColor: "#1877f2",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#1465c8",
+                },
+              }}>
+              Submit
+            </Button>
           </Box>
         )}
       </Box>
