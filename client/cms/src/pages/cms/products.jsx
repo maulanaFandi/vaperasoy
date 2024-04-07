@@ -17,6 +17,7 @@ import Swal from "sweetalert2";
 export default function Products() {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -181,23 +182,52 @@ export default function Products() {
     }
   };
 
-
-  const quantity = 1
-  const handlePurchaseClick = async (id, quantity) => {
-    const product = rows.find(row => row.id === id);
+  const handlePurchaseClick = async (id) => {
+    // Open modal to input quantity and select payment method
+    const { value: formValues } = await Swal.fire({
+      title: 'Purchase Product',
+      html:
+        '<input id="swal-input-quantity" class="swal2-input" placeholder="Quantity">' +
+        '<select id="swal-select-payment" class="swal2-select">' +
+        '<option value="Cash">Cash</option>' +
+        '<option value="Debit">Debit</option>' +
+        '<option value="Credit">Credit</option>' +
+        '<option value="QRIS">QRIS</option>' +
+        '</select>',
+      focusConfirm: false,
+      preConfirm: () => {
+        return [
+          document.getElementById('swal-input-quantity').value,
+          document.getElementById('swal-select-payment').value
+        ]
+      }
+    });
   
-    // Check if product exists and if its stock is greater than zero
-    if (product && product.stock > 0) {
+    const [quantity, paymentMethod] = formValues;
+  
+    if (quantity && paymentMethod) {
       try {
-        const response = await axios.post(`http://localhost:3000/api/products/${id}/purchases`, { quantity }, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        });
-  
+        // Check if product exists and if its stock is greater than zero
+        const product = rows.find((row) => row.id === id);
+        if (!product) {
+          throw new Error('Product not found.');
+        }
+        if (product.stock < quantity) {
+          throw new Error('Not enough stock.');
+        }
+        // Proceed with purchase
+        await axios.post(
+          `http://localhost:3000/api/products/${id}/purchases`,
+          { quantity, paymentMethod },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            },
+          }
+        );
         // Update the stock locally after a successful purchase
-        const updatedRows = rows.map(row => {
-          if (row._id === id) {
+        const updatedRows = rows.map((row) => {
+          if (row.id === id) {
             return {
               ...row,
               stock: row.stock - quantity, // Deduct purchased quantity from stock
@@ -205,36 +235,23 @@ export default function Products() {
           }
           return row;
         });
-  
         setRows(updatedRows);
-  
         Swal.fire({
-          title: "Success",
-          text: "Product has been purchased.",
-          icon: "success",
-          confirmButtonText: "OK",
+          title: 'Success',
+          text: 'Product has been purchased.',
+          icon: 'success',
+          confirmButtonText: 'OK',
         });
       } catch (error) {
-        console.log(error);
         Swal.fire({
-          title: "Error",
-          text: "Failed to purchase product. Please try again later.",
-          icon: "error",
-          confirmButtonText: "OK",
+          title: 'Error',
+          text: `Failed to purchase product: ${error.message}`,
+          icon: 'error',
+          confirmButtonText: 'OK',
         });
       }
-    } else {
-      // Show a message indicating the product is out of stock
-      Swal.fire({
-        title: "Out of Stock",
-        text: "This product is currently out of stock.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
     }
-  };
-  
-  
+  };  
 
   const columns = [
     { field: "_id", headerName: "ID", width: 200 },

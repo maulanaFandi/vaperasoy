@@ -6,12 +6,14 @@ class PurchaseModel {
     return db.collection("Purchases");
   }
 
-  static async createPurchase(productId, quantity, price) {
+  static async createPurchase(productId, quantity, price, paymentMethod, productData) {
     const purchase = {
       product: new ObjectId(productId),
+      productData: productData,
       quantity: quantity,
       timestamp: new Date(),
-      price: price
+      price: price,
+      paymentMethod: paymentMethod
     };
     return await PurchaseModel.getCollection().insertOne(purchase);
   }

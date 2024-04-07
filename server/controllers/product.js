@@ -92,7 +92,7 @@ class ProductController {
   static async createPurchase(req, res, next) {
     try {
       const productId = req.params.id;
-      const quantity = 1;
+      const quantity = req.body.quantity;
 
       // Dapatkan informasi produk dari database
       const product = await ProductModel.getProductById(productId);
@@ -106,9 +106,11 @@ class ProductController {
       }
 
       const price = product.price;
+      const paymentMethod = req.body.paymentMethod
+      const productData = product
 
       // Lakukan pembelian produk
-      await PurchaseModel.createPurchase(productId, quantity, price);
+      await PurchaseModel.createPurchase(productId, quantity, price, paymentMethod, productData);
 
       // Kurangi stok produk
       product.stock -= quantity;
