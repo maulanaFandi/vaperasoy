@@ -106,11 +106,17 @@ class ProductController {
       }
 
       const price = product.price;
-      const paymentMethod = req.body.paymentMethod
-      const productData = product
+      const paymentMethod = req.body.paymentMethod;
+      const productData = product;
+      const totalPrice = price * quantity
 
-      // Lakukan pembelian produk
-      await PurchaseModel.createPurchase(productId, quantity, price, paymentMethod, productData);
+      await PurchaseModel.createPurchase(
+        productId,
+        quantity,
+        totalPrice,
+        paymentMethod,
+        productData
+      );
 
       // Kurangi stok produk
       product.stock -= quantity;
