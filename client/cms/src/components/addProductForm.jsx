@@ -25,12 +25,13 @@ export default function AddProductForm() {
     category: "",
     stock: 0,
     brand: "",
+    type: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
     }));
   };
@@ -47,7 +48,6 @@ export default function AddProductForm() {
         icon: "success",
         text: "Add Product successful!",
       });
-
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -58,15 +58,64 @@ export default function AddProductForm() {
     }
   };
 
+  const renderTypeField = () => {
+    if (formData.category === "Liquid") {
+      return (
+        <Grid item xs={12}>
+          <FormControl fullWidth>
+            <InputLabel id="type-label">Type</InputLabel>
+            <Select
+              labelId="type-label"
+              id="type"
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              label="Type"
+              variant="outlined"
+              fullWidth>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value="Freebase">Freebase</MenuItem>
+              <MenuItem value="Saltnic">Saltnic</MenuItem>
+              <MenuItem value="Pods Frienndly">Pods Friendly</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+      );
+    } else if (formData.category === "Device") {
+      return (
+        <Grid item xs={12}>
+          <FormControl fullWidth>
+            <InputLabel id="type-label">Type</InputLabel>
+            <Select
+              labelId="type-label"
+              id="type"
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              label="Type"
+              variant="outlined"
+              fullWidth>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value="Pod">Pod</MenuItem>
+              <MenuItem value="Aio">Aio</MenuItem>
+              <MenuItem value="Mod">Mod</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+      );
+    }
+    return null;
+  };
+
   return (
-    <Grid container spacing={3} justifyContent="center" alignItems="center">
-      <Grid item xs={12} md={6}>
+    <Grid container justifyContent="center" alignItems="center" spacing={3}>
+      <Grid item xs={12} sm={10} md={8} lg={6}>
         <Paper elevation={3} style={{ padding: 20 }}>
-          <Typography
-            variant="h4"
-            gutterBottom
-            align="center"
-            fontWeight="bold">
+          <Typography variant="h4" align="center" fontWeight="bold">
             Add Product
           </Typography>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -119,7 +168,6 @@ export default function AddProductForm() {
                   fullWidth
                 />
               </Grid>
-
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel id="category-label">Category</InputLabel>
@@ -153,7 +201,6 @@ export default function AddProductForm() {
                   fullWidth
                 />
               </Grid>
-
               <Grid item xs={12}>
                 <TextareaAutosize
                   id="description"
@@ -164,6 +211,7 @@ export default function AddProductForm() {
                   style={{ width: "100%", minHeight: 100 }}
                 />
               </Grid>
+              {renderTypeField()}
               <Grid item xs={12}>
                 <Button
                   type="submit"
