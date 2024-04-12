@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Typography, CircularProgress, Container, Grid } from "@mui/material";
+import { Typography, CircularProgress } from "@mui/material";
+import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import DailySummary from "../../components/dailySummary.jsx";
-import MonthlySummary from "../../components/monthlySummary.jsx";
 
-export default function Home() {
+export default function DailySummary() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [dailySummary, setDailySummary] = useState([]);
 
   // useEffect hook
   useEffect(() => {
@@ -26,21 +26,19 @@ export default function Home() {
         const transformedData = response.data.map((item) => ({
           id: item._id,
           name: item.productData.name,
-          price: item.price.toLocaleString("id-ID", {
-            style: "currency",
-            currency: "IDR",
-          }),
+          price: item.price,
           quantity: item.quantity,
-          totalPrice: item.totalPrice.toLocaleString("id-ID", {
-            style: "currency",
-            currency: "IDR",
-          }),
+          totalPrice: item.totalPrice,
           paymentMethod: item.paymentMethod,
           timestamp: formatDate(new Date(item.timestamp)),
         }));
 
         setData(transformedData);
         setLoading(false); // Data fetching is complete
+
+        // Calculate daily summary
+        const summary = calculateDailySummary(transformedData);
+        setDailySummary(summary);
       } catch (error) {
         setError(error.message); // Set error message
         setLoading(false); // Data fetching failed
@@ -59,27 +57,44 @@ export default function Home() {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   };
 
+  const calculateDailySummary = (data) => {
+    const summary = {};
+    data.forEach((item) => {
+      const date = item.timestamp.split(" ")[0]; // Get date part only
+      if (!summary[date]) {
+        summary[date] = {
+          totalPrice: 0,
+          totalQuantity: 0,
+        };
+      }
+      summary[date].totalPrice += item.totalPrice;
+      summary[date].totalQuantity += item.quantity;
+    });
+    return summary;
+  };
+
   const columns = [
-    { field: "timestamp", headerName: "Date", width: 200 },
-    { field: "name", headerName: "Name", width: 180 },
-    { field: "price", headerName: "Price", width: 180 },
-    { field: "quantity", headerName: "Quantity", width: 180 },
+    { field: "date", headerName: "Date", width: 200 },
     { field: "totalPrice", headerName: "Total Price", width: 180 },
-    { field: "paymentMethod", headerName: "Payment Method", width: 180 },
+    { field: "totalQuantity",align: "center", headerName: "Total Quantity", width: 180 },
   ];
+
+  const summaryRows = Object.keys(dailySummary).map((date) => ({
+    id: date,
+    date,
+    totalPrice: dailySummary[date].totalPrice.toLocaleString("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }),
+    totalQuantity: dailySummary[date].totalQuantity,
+  }));
 
   return (
     <>
       {loading ? (
-        <Container
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}>
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
           <CircularProgress />
-        </Container>
+        </Box>
       ) : error ? (
         <Typography variant="h5" color="error" align="center">
           Error: {error}
@@ -90,38 +105,31 @@ export default function Home() {
         </Typography>
       ) : (
         <>
-          <Container>
-            <Grid container justifyContent="center">
-              <Container
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  flexDirection: "row",
-                  marginTop: 10,
-                  flexGrow: 1,
-                  marginLeft: 10,
-                }}>
-                <DailySummary />
-                <MonthlySummary />
-              </Container>
-              
-                
-              <Grid item xs={12} sx={{ marginTop: 5 }}>
-                <DataGrid
-                  getRowId={(row) => row.id}
-                  rows={data}
-                  columns={columns}
-                  sx={{
-                    marginLeft: 20,
-                    width: "80%",
-                    height: "80%",
-                  }}
-
-                />
-              </Grid>
-            </Grid>
-          </Container>
+          <Box
+            sx={{
+              justifyContent: "center",
+              display: "flex",
+              flexDirection: "column",
+              width: 450,
+              height: 350,
+              margin: "auto",
+              "& .actions": {
+                color: "text.secondary",
+              },
+              "& .textPrimary": {
+                color: "text.primary",
+              },
+            }}
+          >
+            <Typography variant="h5">
+              Daily Summary
+            </Typography>
+            <DataGrid
+              getRowId={(row) => row.id}
+              rows={summaryRows}
+              columns={columns}
+            />
+          </Box>
         </>
       )}
     </>
