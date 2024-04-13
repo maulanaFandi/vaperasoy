@@ -75,41 +75,44 @@ export default function Testimonials() {
       </Box>
       <Grid container spacing={2}>
         {data.map((result) => (
-          <Grid
-            item
-            xs={12}
-            sm={6}
-            md={4}
-            key={result._id}
-            sx={{ display: "flex" }}>
-            <Card
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                flexGrow: 1,
-                p: 1,
-              }}>
-              <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                  {result.testimony}
-                </Typography>
-              </CardContent>
-              <Box
+          // Check if testimony is not empty before rendering
+          result.testimony !== "" && (
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              key={result._id}
+              sx={{ display: "flex" }}>
+              <Card
                 sx={{
                   display: "flex",
-                  flexDirection: "row",
+                  flexDirection: "column",
                   justifyContent: "space-between",
-                  pr: 2,
+                  flexGrow: 1,
+                  p: 1,
                 }}>
-                {/* Displaying the image as Avatar */}
-                <CardHeader
-                  avatar={<Avatar src={result.imgUrl} />} // Using Avatar component
-                  title={result.name}
-                />
-              </Box>
-            </Card>
-          </Grid>
+                <CardContent>
+                  <Typography variant="body2" color="text.secondary">
+                    {result.testimony}
+                  </Typography>
+                </CardContent>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    pr: 2,
+                  }}>
+                  {/* Displaying the image as Avatar */}
+                  <CardHeader
+                    avatar={<Avatar src={result.imgUrl} />} // Using Avatar component
+                    title={result.name}
+                  />
+                </Box>
+              </Card>
+            </Grid>
+          )
         ))}
       </Grid>
     </Container>

@@ -34,7 +34,7 @@ export default function LandingPage() {
   };
 
   const handleNoClick = () => {
-    setOpenModal(true);
+    setOpenModal(false);
   };
 
   const handleBackdropClick = (event) => {
@@ -56,46 +56,26 @@ export default function LandingPage() {
         <Testimonials />
         <Divider />
         <Footer />
-        <Dialog open={openModal} onClick={handleBackdropClick}>
-          <Paper>
+        <Dialog open={openModal} onClick={handleBackdropClick} sx={{ overflowX: 'hidden' }}>
+          <Paper sx={{ width: '90vw', maxWidth: '400px', m: 'auto' }}>
             <DialogTitle>Confirmation</DialogTitle>
-            <DialogContent>
+            <DialogContent sx={{ textAlign: 'center' }}>
               <img
                 src="https://images.emojiterra.com/google/noto-emoji/unicode-15.1/color/1024px/1f51e.png"
                 width={100}
                 height={100}
                 alt="emoji"
-                style={{
-                  marginRight: "10px",
-                  marginBottom: "10px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginLeft: "40%",
-                }}
+                style={{ marginBottom: "10px" }}
               />
-              <p
-                style={{
-                  textAlign: "center",
-                  marginTop: "10px",
-                  marginBottom: "10px",
-                  fontSize: "30px",
-                  fontWeight: "bold",
-                }}>
+              <p style={{ fontSize: "20px", fontWeight: "bold" }}>
                 Are You Over 18 Years Old?
               </p>
             </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={handleYesClick}
-                color="primary"
-                sx={{ display: "flex", marginRight: "400px" }}>
+            <DialogActions sx={{ justifyContent: 'center', mb: '20px' }}>
+              <Button onClick={handleYesClick} color="primary">
                 Yes
               </Button>
-              <Button
-                onClick={handleNoClick}
-                color="secondary"
-                sx={{ display: "flex" }}>
+              <Button color="secondary">
                 No
               </Button>
             </DialogActions>
