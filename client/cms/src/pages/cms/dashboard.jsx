@@ -100,7 +100,7 @@ export default function Home() {
                   flexDirection: "row",
                   marginTop: 10,
                   flexGrow: 1,
-                  marginLeft: 10,
+                  marginLeft: 15,
                 }}>
                 <DailySummary />
                 <MonthlySummary />
