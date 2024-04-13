@@ -9,14 +9,11 @@ const app = express();
 const router = require("./routes");
 const errorHandler = require("./middlewares/errorHandler");
 
-app.use(bodyParser.json({ limit: "1mb" }));
-app.use(bodyParser.urlencoded({ extended: true, limit: "1mb" }));
-
 app.use(cors());
 
-app.use(express.json());
+app.use(bodyParser.json({ limit: "1mb" }));
 
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "1mb" }));
 
 app.use("/api", router);
 

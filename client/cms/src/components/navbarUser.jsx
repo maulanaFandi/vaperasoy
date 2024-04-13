@@ -17,16 +17,15 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import HeadsetMicIcon from "@mui/icons-material/HeadsetMic";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
+import LogoPNG from "../assets/vapersoy.logo.png";
 
 
 const logoStyle = {
-  width: "100%",
-  height: "auto",
-  color: "black",
-  fontWeight: "bold",
-  fontSize: "20px",
-  marginLeft: "50px",
-  marginRight: "50px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "10%",
+  marginTop: "10px",
 };
 
 function AppAppBar({ mode, toggleColorMode }) {
@@ -129,12 +128,8 @@ function AppAppBar({ mode, toggleColorMode }) {
                   flexGrow: 1,
                   display: "flex",
                   alignItems: "center",
-                  ml: "-18px",
-                  px: 0,
                 }}>
-                <Link to={"/"} style={{ textDecoration: "none" }}>
-                  <Typography style={logoStyle}>Vaperasoy Catalogue</Typography>
-                </Link>
+                  <img src={LogoPNG} alt="Logo" style={logoStyle}/>
                 <Box sx={{ display: { xs: "none", md: "flex" } }}>
                   {isLoggedIn && (
                     <>

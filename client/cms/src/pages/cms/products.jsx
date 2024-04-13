@@ -32,7 +32,6 @@ export default function Products() {
           id: row._id,
           isNew: false,
         }));
-        console.log(formattedData);
         setRows(formattedData);
 
         const initialRowModesModel = {};
@@ -321,6 +320,30 @@ export default function Products() {
       valueOptions: ["Freebase", "Saltnic", "Pods Friendly"],
     },
     {
+      field: "size",
+      headerName: "Size",
+      width: 180,
+      editable: true,
+      type: "singleSelect",
+      valueOptions: ["30Ml", "60Ml"],
+    },
+    {
+      field: "nic",
+      headerName: "Nicotine",
+      width: 180,
+      editable: true,
+      type: "singleSelect",
+      valueOptions: ["3Mg", "6Mg", "12Mg"],
+    },
+    {
+      field: "ohm",
+      headerName: "Ohm",
+      width: 180,
+      editable: true,
+      type: "singleSelect",
+      valueOptions: ["30Ml", "60Ml"],
+    },
+    {
       field: "stock",
       headerName: "Stock",
       type: "number",
@@ -342,6 +365,12 @@ export default function Products() {
       width: 180,
       align: "left",
       headerAlign: "left",
+      editable: true,
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      width: 180,
       editable: true,
     },
     {

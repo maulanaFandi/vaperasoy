@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Typography, CircularProgress, Container, Grid } from "@mui/material";
+import { CircularProgress, Container, Grid } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import DailySummary from "../../components/dailySummary.jsx";
 import MonthlySummary from "../../components/monthlySummary.jsx";
@@ -38,7 +38,6 @@ export default function Home() {
           paymentMethod: item.paymentMethod,
           timestamp: formatDate(new Date(item.timestamp)),
         }));
-
         setData(transformedData);
         setLoading(false); // Data fetching is complete
       } catch (error) {
@@ -80,14 +79,6 @@ export default function Home() {
           }}>
           <CircularProgress />
         </Container>
-      ) : error ? (
-        <Typography variant="h5" color="error" align="center">
-          Error: {error}
-        </Typography>
-      ) : data.length === 0 ? (
-        <Typography variant="h5" align="center">
-          No data available
-        </Typography>
       ) : (
         <>
           <Container>
@@ -105,20 +96,17 @@ export default function Home() {
                 <DailySummary />
                 <MonthlySummary />
               </Container>
-              
-                
-              <Grid item xs={12} sx={{ marginTop: 5 }}>
-                <DataGrid
-                  getRowId={(row) => row.id}
-                  rows={data}
-                  columns={columns}
-                  sx={{
-                    marginLeft: 20,
-                    width: "80%",
-                    height: "80%",
-                  }}
 
-                />
+              <Grid item xs={12} sx={{ marginTop: 5 }}>
+                <div style={{ height: 400, width: '80%', marginLeft: "170px" }}> {/* Adjust the height as needed */}
+                  <DataGrid
+                    getRowId={(row) => row.id}
+                    rows={data}
+                    columns={columns}
+                    pagination
+                    pageSize={10} // Set the page size as needed
+                  />
+                </div>
               </Grid>
             </Grid>
           </Container>

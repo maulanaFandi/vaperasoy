@@ -144,14 +144,50 @@ const UserDetailProduct = () => {
               {formatPrice(productData.price)}
             </Typography>
 
-            <Box sx={{ display: "flex", flexDirection: "row",mt: 2, alignItems: "center", justifyContent: "center" }}>
-            <Typography variant="h5">
-              Category: {productData.category} |
-            </Typography>
-            <Typography ml={2} variant="h5">Stock: {productData.stock} |</Typography>
-            <Typography ml={2} variant="h5">Brand: {productData.brand} </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                mt: 2,
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+              <Typography variant="h5">
+                Category: {productData.category} |
+              </Typography>
+              <Typography ml={2} variant="h5">
+                Stock: {productData.stock} |
+              </Typography>
+              <Typography ml={2} variant="h5">
+                Brand: {productData.brand}{" "}
+              </Typography>
             </Box>
-            <Typography mt={2} variant="h5">Rating: {productData.rating}</Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                mt: 2,
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+              <Typography variant="h5">{productData.type}</Typography>
+              {(productData.type !== "Accessories") && (
+                <Typography ml={2} variant="h5">
+                  {productData.size}
+                </Typography>
+              )}
+
+              {productData.category === "Liquid" && (
+                <Typography ml={2} variant="h5">
+                  {productData.nic}
+                </Typography>
+              )}
+            </Box>
+
+            <Typography mt={2} variant="h5">
+              Rating: {productData.rating}
+            </Typography>
             <Box sx={{ mt: 2 }}>
               <Typography variant="h5" gutterBottom>
                 Add Rating:

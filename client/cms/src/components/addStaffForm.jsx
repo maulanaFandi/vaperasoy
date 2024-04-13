@@ -180,7 +180,7 @@ export default function AddStaffForm() {
                   variant="contained"
                   color="primary"
                   fullWidth>
-                  Register
+                  Submit
                 </Button>
               </Grid>
             </Grid>

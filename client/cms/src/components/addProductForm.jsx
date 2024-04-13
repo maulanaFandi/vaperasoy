@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -43,10 +42,7 @@ export default function AddProductForm() {
 
     if (file.size > 100 * 1024) {
       // File terlalu besar
-      Swal.fire({
-        icon: "error",
-        text: "File terlalu besar. Maksimal 100KB diizinkan.",
-      });
+      alert("File terlalu besar. Maksimal 100KB diizinkan.");
       return;
     }
 
@@ -70,17 +66,11 @@ export default function AddProductForm() {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-      Swal.fire({
-        icon: "success",
-        text: "Add Product successful!",
-      });
+      alert("Add Product successful!");
       navigate("/");
     } catch (error) {
       console.log(error);
-      Swal.fire({
-        icon: "warning",
-        text: error.response.data.message,
-      });
+      alert(error.response.data.message);
     }
   };
 
@@ -142,12 +132,15 @@ export default function AddProductForm() {
               <MenuItem value="3Mg">3 Mg</MenuItem>
               <MenuItem value="6Mg">6 Mg</MenuItem>
               <MenuItem value="12Mg">12 Mg</MenuItem>
+              <MenuItem value="24Mg">24 Mg</MenuItem>
+              <MenuItem value="30Mg">30 Mg</MenuItem>
+              <MenuItem value="40Mg">40 Mg</MenuItem>
+              <MenuItem value="50Mg">50 Mg</MenuItem>
             </Select>
           </FormControl>
         </Grid>
       );
-    } 
-    else if (formData.category === "Device") {
+    } else if (formData.category === "Device") {
       return (
         <Grid item xs={12}>
           <FormControl fullWidth>
@@ -171,8 +164,7 @@ export default function AddProductForm() {
           </FormControl>
         </Grid>
       );
-    }
-    else if (formData.category === "Accessories") {
+    } else if (formData.category === "Accessories") {
       return (
         <Grid item xs={12}>
           <FormControl fullWidth>
@@ -191,28 +183,37 @@ export default function AddProductForm() {
               </MenuItem>
               <MenuItem value="Cartridge">Cartridge</MenuItem>
               <MenuItem value="Coil">Coil</MenuItem>
-              <MenuItem value=""></MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
             </Select>
           </FormControl>
-          <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel id="size-label">Size</InputLabel>
-            <Select
-              labelId="size-label"
-              id="size"
-              name="size"
-              value={formData.size}
-              onChange={handleChange}
-              label="Size"
-              variant="outlined"
-              fullWidth>
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value="Cartridge">Cartridge</MenuItem>
-              <MenuItem value="Coil">Coil</MenuItem>
-              <MenuItem value=""></MenuItem>
-            </Select>
-          </FormControl>
+          {formData.type !== "Other" && (
+            <FormControl fullWidth sx={{ mt: 2 }}>
+              <InputLabel id="ohm-label">Ohm</InputLabel>
+              <Select
+                labelId="ohm-label"
+                id="ohm"
+                name="ohm"
+                value={formData.ohm}
+                onChange={handleChange}
+                label="Ohm"
+                variant="outlined"
+                fullWidth>
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value="0.1">0.1</MenuItem>
+                <MenuItem value="0.2">0.2</MenuItem>
+                <MenuItem value="0.3">0.3</MenuItem>
+                <MenuItem value="0.4">0.4</MenuItem>
+                <MenuItem value="0.5">0.5</MenuItem>
+                <MenuItem value="0.6">0.6</MenuItem>
+                <MenuItem value="0.7">0.7</MenuItem>
+                <MenuItem value="0.8">0.8</MenuItem>
+                <MenuItem value="0.9">0.9</MenuItem>
+                <MenuItem value="1.0">1.0</MenuItem>
+              </Select>
+            </FormControl>
+          )}
         </Grid>
       );
     }
@@ -222,7 +223,7 @@ export default function AddProductForm() {
   return (
     <Grid container justifyContent="center" alignItems="center" spacing={3}>
       <Grid item xs={12} sm={10} md={8} lg={6}>
-        <Paper elevation={3} style={{ padding: 20 }}>
+        <Paper elevation={3} sx={{ p: 3 }}>
           <Typography variant="h4" align="center" fontWeight="bold">
             Add Product
           </Typography>
@@ -345,7 +346,7 @@ export default function AddProductForm() {
                   variant="contained"
                   color="primary"
                   fullWidth>
-                  Register
+                  Submit
                 </Button>
               </Grid>
             </Grid>

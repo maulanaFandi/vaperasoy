@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Grid, Typography, Select, MenuItem, CircularProgress, Box } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Select,
+  MenuItem,
+  CircularProgress,
+  Box,
+} from "@mui/material";
 import { styled } from "@mui/system";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
@@ -63,7 +70,10 @@ export default function ProductCard() {
   const paginatedProducts = products.slice((page - 1) * 10, page * 10); // Get products for current page
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(price);
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(price);
   };
 
   return (
@@ -77,8 +87,7 @@ export default function ProductCard() {
         alignItems: "center",
         textAlign: "center",
         width: "100%",
-      }}
-    >
+      }}>
       <Grid
         container
         item
@@ -90,9 +99,12 @@ export default function ProductCard() {
           flexDirection: "column",
         }}
         mt={2}
-        mb={2}
-      >
-        <Grid item xs={12} md={6} sx={{ display: "flex", flexGrow: 1, maxWidth: "300px" }}>
+        mb={2}>
+        <Grid
+          item
+          xs={12}
+          md={6}
+          sx={{ display: "flex", flexGrow: 1, maxWidth: "300px" }}>
           <TextField
             type="text"
             placeholder="Search..."
@@ -104,8 +116,7 @@ export default function ProductCard() {
             id="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            sx={{ minWidth: 120, height: 57, ml: 2, mt: 1 }}
-          >
+            sx={{ minWidth: 120, height: 57, ml: 2, mt: 1 }}>
             <MenuItem value="Liquid">Liquid</MenuItem>
             <MenuItem value="Device">Devices</MenuItem>
             <MenuItem value="Accessories">Accessories</MenuItem>
@@ -115,11 +126,32 @@ export default function ProductCard() {
       {paginatedProducts.length > 0 ? (
         paginatedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
-            <Card sx={{ maxWidth: 345, height: "500px", alignItems: "center", textAlign: "center", justifyContent: "center", display: "flex", flexDirection: "column", p: 2, gap: 2, ml: 2 }}>
+            <Card
+              sx={{
+                maxWidth: 345,
+                height: "500px",
+                alignItems: "center",
+                textAlign: "center",
+                justifyContent: "center",
+                display: "flex",
+                flexDirection: "column",
+                p: 2,
+                gap: 2,
+                ml: 2,
+              }}>
               <CardMedia
                 component="img"
                 alt="imageUrl"
-                sx={{padding: 2, maxWidth: 300, objectFit: "contain", margin: "auto", display: "block", justifyContent: "center", alignItems: "center", height: "300px" }}
+                sx={{
+                  padding: 2,
+                  maxWidth: 300,
+                  objectFit: "contain",
+                  margin: "auto",
+                  display: "block",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "300px",
+                }}
                 image={product.imageUrl}
               />
               <CardContent>
@@ -142,7 +174,8 @@ export default function ProductCard() {
           </Grid>
         ))
       ) : (
-        <Box sx={{ display: "flex", justifyContent: "center", marginTop: "50px" }}>
+        <Box
+          sx={{ display: "flex", justifyContent: "center", marginTop: "50px" }}>
           <CircularProgress />
         </Box>
       )}
@@ -157,8 +190,7 @@ export default function ProductCard() {
           width: "100%",
           display: "flex",
           justifyContent: "center",
-        }}
-      >
+        }}>
         <Pagination
           page={page}
           count={totalPages}

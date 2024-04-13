@@ -36,7 +36,8 @@ class ProductController {
         rating,
         type,
         size,
-        nic
+        nic,
+        ohm
       } = req.body;
 
       const result = await ProductModel.createProduct({
@@ -50,7 +51,8 @@ class ProductController {
         rating,
         type,
         size,
-        nic
+        nic,
+        ohm
       });
       res.status(201).json(result);
     } catch (error) {
