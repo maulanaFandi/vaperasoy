@@ -115,7 +115,7 @@ export default function ProductCard() {
       {paginatedProducts.length > 0 ? (
         paginatedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
-            <Card sx={{ maxWidth: 345, height: "500px" }}>
+            <Card sx={{ maxWidth: 345, height: "500px", alignItems: "center", textAlign: "center", justifyContent: "center", display: "flex", flexDirection: "column", p: 2, gap: 2, ml: 2 }}>
               <CardMedia
                 component="img"
                 alt="imageUrl"
