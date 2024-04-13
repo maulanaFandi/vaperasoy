@@ -19,9 +19,9 @@ import {
   Box,
   Avatar,
 } from "@mui/material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import LogoPng from "../assets/vapersoy.logo.png";
 
 const defaultTheme = createTheme();
 
@@ -54,7 +54,7 @@ export default function Register() {
 
   const handleTogglePasswordConfirm = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,7 +66,7 @@ export default function Register() {
       });
       return;
     }
-    
+
     try {
       const response = await axios.post(
         "http://localhost:3000/api/register",
@@ -117,9 +117,8 @@ export default function Register() {
               flexDirection: "column",
               alignItems: "center",
             }}>
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
+            <img src={LogoPng} alt="Logo" style={{ width: "200px" }} />
+
             <Typography component="h1" variant="h5">
               Register
             </Typography>
