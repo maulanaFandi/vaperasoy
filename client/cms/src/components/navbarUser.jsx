@@ -172,7 +172,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                       </Button>
                     </Link>
 
-                    <Link to={"/register"} style={{ textDecoration: "none" }}>
+                    <Link to={"/register"} style={{ textDecoration: "none", marginLeft: "10px" }}>
                       <Button color="primary" variant="contained" size="small">
                         Sign up
                       </Button>
