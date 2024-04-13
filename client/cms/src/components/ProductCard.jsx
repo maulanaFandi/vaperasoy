@@ -35,16 +35,15 @@ export default function ProductCard() {
             },
           }
         );
-        const filteredProducts = response.data.filter((product) => {
-          // Filter products based on search query
-          return product.name.toLowerCase().includes(searchQuery.toLowerCase());
-        });
+        const filteredProducts = response.data.filter((product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
 
         const sortedProducts = category
           ? filteredProducts.filter((product) => product.category === category)
           : filteredProducts;
 
-        setTotalPages(Math.ceil(sortedProducts.length / 10)); // Calculate total pages
+        setTotalPages(Math.ceil(sortedProducts.length / 12)); // Calculate total pages
         setProducts(sortedProducts);
       } catch (error) {
         console.error(error);
@@ -64,7 +63,7 @@ export default function ProductCard() {
   const paginatedProducts = products.slice((page - 1) * 10, page * 10); // Get products for current page
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+    return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(price);
   };
 
   return (
@@ -77,10 +76,9 @@ export default function ProductCard() {
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
-        flexDirection: "row",
-        gap: 4,
         width: "100%",
-      }}>
+      }}
+    >
       <Grid
         container
         item
@@ -89,13 +87,12 @@ export default function ProductCard() {
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
-          width: "100%",
-          flexDirection: "row",
+          flexDirection: "column",
         }}
-        gap={2}
         mt={2}
-        mb={2}>
-        <Grid item xs={12} md={6} sx={{ display: "flex", flexGrow: 1 }}>
+        mb={2}
+      >
+        <Grid item xs={12} md={6} sx={{ display: "flex", flexGrow: 1, maxWidth: "300px" }}>
           <TextField
             type="text"
             placeholder="Search..."
@@ -107,23 +104,22 @@ export default function ProductCard() {
             id="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            sx={{ minWidth: 120, height: 57, ml: 2, mt: 1 }}>
+            sx={{ minWidth: 120, height: 57, ml: 2, mt: 1 }}
+          >
             <MenuItem value="Liquid">Liquid</MenuItem>
-            <MenuItem value="Devices">Devices</MenuItem>
+            <MenuItem value="Device">Devices</MenuItem>
             <MenuItem value="Accessories">Accessories</MenuItem>
-            {/* Add more categories as needed */}
           </Select>
         </Grid>
       </Grid>
       {paginatedProducts.length > 0 ? (
         paginatedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
-            <Card sx={{ maxWidth: 345 }}>
+            <Card sx={{ maxWidth: 345, height: "500px" }}>
               <CardMedia
                 component="img"
                 alt="imageUrl"
-                maxheight="150"
-                maxwidth="150"
+                sx={{padding: 2, maxWidth: 300, objectFit: "contain", margin: "auto", display: "block", justifyContent: "center", alignItems: "center", height: "300px" }}
                 image={product.imageUrl}
               />
               <CardContent>
@@ -161,7 +157,8 @@ export default function ProductCard() {
           width: "100%",
           display: "flex",
           justifyContent: "center",
-        }}>
+        }}
+      >
         <Pagination
           page={page}
           count={totalPages}

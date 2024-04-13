@@ -14,6 +14,7 @@ import {
   Grid,
   Paper,
 } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 export default function AddProductForm() {
   const navigate = useNavigate();
@@ -34,6 +35,31 @@ export default function AddProductForm() {
       ...prevFormData,
       [name]: value,
     }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    if (file.size > 100 * 1024) {
+      // File terlalu besar
+      Swal.fire({
+        icon: "error",
+        text: "File terlalu besar. Maksimal 100KB diizinkan.",
+      });
+      return;
+    }
+
+    reader.onloadend = () => {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        imageUrl: reader.result,
+      }));
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -78,12 +104,50 @@ export default function AddProductForm() {
               </MenuItem>
               <MenuItem value="Freebase">Freebase</MenuItem>
               <MenuItem value="Saltnic">Saltnic</MenuItem>
-              <MenuItem value="Pods Frienndly">Pods Friendly</MenuItem>
+              <MenuItem value="Pods Friendly">Pods Friendly</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <InputLabel id="size-label">Size</InputLabel>
+            <Select
+              labelId="size-label"
+              id="size"
+              name="size"
+              value={formData.size}
+              onChange={handleChange}
+              label="Size"
+              variant="outlined"
+              fullWidth>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value="30Ml">30 Ml</MenuItem>
+              <MenuItem value="60Ml">60 Ml</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <InputLabel id="nic-label">Nic</InputLabel>
+            <Select
+              labelId="nic-label"
+              id="nic"
+              name="nic"
+              value={formData.nic}
+              onChange={handleChange}
+              label="nic"
+              variant="outlined"
+              fullWidth>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value="3Mg">3 Mg</MenuItem>
+              <MenuItem value="6Mg">6 Mg</MenuItem>
+              <MenuItem value="12Mg">12 Mg</MenuItem>
             </Select>
           </FormControl>
         </Grid>
       );
-    } else if (formData.category === "Device") {
+    } 
+    else if (formData.category === "Device") {
       return (
         <Grid item xs={12}>
           <FormControl fullWidth>
@@ -103,6 +167,50 @@ export default function AddProductForm() {
               <MenuItem value="Pod">Pod</MenuItem>
               <MenuItem value="Aio">Aio</MenuItem>
               <MenuItem value="Mod">Mod</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+      );
+    }
+    else if (formData.category === "Accessories") {
+      return (
+        <Grid item xs={12}>
+          <FormControl fullWidth>
+            <InputLabel id="type-label">Type</InputLabel>
+            <Select
+              labelId="type-label"
+              id="type"
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              label="Type"
+              variant="outlined"
+              fullWidth>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value="Cartridge">Cartridge</MenuItem>
+              <MenuItem value="Coil">Coil</MenuItem>
+              <MenuItem value=""></MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <InputLabel id="size-label">Size</InputLabel>
+            <Select
+              labelId="size-label"
+              id="size"
+              name="size"
+              value={formData.size}
+              onChange={handleChange}
+              label="Size"
+              variant="outlined"
+              fullWidth>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value="Cartridge">Cartridge</MenuItem>
+              <MenuItem value="Coil">Coil</MenuItem>
+              <MenuItem value=""></MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -156,7 +264,7 @@ export default function AddProductForm() {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                   type="text"
                   id="imageUrl"
@@ -168,6 +276,25 @@ export default function AddProductForm() {
                   fullWidth
                 />
               </Grid>
+              <Grid item xs={6}>
+                <input
+                  accept="image/*"
+                  id="contained-button-file"
+                  type="file"
+                  style={{ display: "none" }}
+                  onChange={(e) => handleImageChange(e)}
+                />
+                <label htmlFor="contained-button-file">
+                  <Button
+                    variant="contained"
+                    component="span"
+                    fullWidth
+                    startIcon={<CloudUploadIcon />}>
+                    Upload Image
+                  </Button>
+                </label>
+              </Grid>
+
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel id="category-label">Category</InputLabel>

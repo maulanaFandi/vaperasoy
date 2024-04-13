@@ -313,6 +313,14 @@ export default function Products() {
       valueOptions: ["Liquid", "Devices", "Accesories"],
     },
     {
+      field: "type",
+      headerName: "Type",
+      width: 180,
+      editable: true,
+      type: "singleSelect",
+      valueOptions: ["Freebase", "Saltnic", "Pods Friendly"],
+    },
+    {
       field: "stock",
       headerName: "Stock",
       type: "number",
