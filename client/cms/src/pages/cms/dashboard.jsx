@@ -8,17 +8,16 @@ import MonthlySummary from "../../components/monthlySummary.jsx";
 export default function Home() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // useEffect hook
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const accessToken = localStorage.getItem("access_token");
         const response = await axios.get(
           "http://localhost:3000/api/products/purchases",
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+              Authorization: `Bearer ${accessToken}`,
             },
           }
         );
@@ -26,23 +25,18 @@ export default function Home() {
         const transformedData = response.data.map((item) => ({
           id: item._id,
           name: item.productData.name,
-          price: item.price.toLocaleString("id-ID", {
-            style: "currency",
-            currency: "IDR",
-          }),
+          price: formatCurrency(item.price),
           quantity: item.quantity,
-          totalPrice: item.totalPrice.toLocaleString("id-ID", {
-            style: "currency",
-            currency: "IDR",
-          }),
+          totalPrice: formatCurrency(item.totalPrice),
           paymentMethod: item.paymentMethod,
           timestamp: formatDate(new Date(item.timestamp)),
         }));
+
         setData(transformedData);
-        setLoading(false); // Data fetching is complete
+        setLoading(false);
       } catch (error) {
-        setError(error.message); // Set error message
-        setLoading(false); // Data fetching failed
+        console.log(error);
+        setLoading(false);
       }
     };
     fetchData();
@@ -56,6 +50,14 @@ export default function Home() {
     const minutes = String(date.getMinutes()).padStart(2, "0");
     const seconds = String(date.getSeconds()).padStart(2, "0");
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  };
+
+  const formatCurrency = (amount) => {
+    // Fungsi untuk mengubah ke format mata uang IDR
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(amount);
   };
 
   const columns = [
@@ -98,13 +100,13 @@ export default function Home() {
               </Container>
 
               <Grid item xs={12} sx={{ marginTop: 5 }}>
-                <div style={{ height: 400, width: '80%', marginLeft: "170px" }}> {/* Adjust the height as needed */}
+                <div style={{ height: 400, width: "80%", marginLeft: "175px" }}>
                   <DataGrid
                     getRowId={(row) => row.id}
                     rows={data}
                     columns={columns}
                     pagination
-                    pageSize={10} // Set the page size as needed
+                    pageSize={10}
                   />
                 </div>
               </Grid>
