@@ -6,12 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridRowModes,
-  GridRowEditStopReasons,
-} from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, GridRowModes } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 import Swal from "sweetalert2";
 
@@ -184,7 +179,7 @@ export default function Products() {
     const { value: formValues } = await Swal.fire({
       title: "Purchase Product",
       html:
-        '<input id="swal-input-quantity" type="number" class="swal2-input" placeholder="Quantity">' +
+        '<input id="swal-input-quantity" type="number" class="swal2-input" placeholder="Quantity" value={""}/>' +
         '<select id="swal-select-payment" class="swal2-select">' +
         '<option value="Cash">Cash</option>' +
         '<option value="Debit">Debit</option>' +
@@ -333,7 +328,7 @@ export default function Products() {
       width: 180,
       editable: true,
       type: "singleSelect",
-      valueOptions: ["3Mg", "6Mg", "12Mg"],
+      valueOptions: ["3Mg", "6Mg", "12Mg", "24Mg", "30Mg", "40Mg", "50Mg"],
     },
     {
       field: "ohm",
@@ -341,7 +336,18 @@ export default function Products() {
       width: 180,
       editable: true,
       type: "singleSelect",
-      valueOptions: ["30Ml", "60Ml"],
+      valueOptions: [
+        "0.1",
+        "0.2",
+        "0.3",
+        "0.4",
+        "0.5",
+        "0.6",
+        "0.7",
+        "0.8",
+        "0.9",
+        "1.0",
+      ],
     },
     {
       field: "stock",

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import {
   TextField,
   Button,
@@ -42,7 +43,11 @@ export default function AddProductForm() {
 
     if (file.size > 100 * 1024) {
       // File terlalu besar
-      alert("File terlalu besar. Maksimal 100KB diizinkan.");
+      Swal.fire(
+        "Error",
+        "File terlalu besar. Maksimal 100KB diizinkan.",
+        "error"
+      );
       return;
     }
 
@@ -66,11 +71,11 @@ export default function AddProductForm() {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-      alert("Add Product successful!");
+      Swal.fire("Success", "Add Product successful!", "success");
       navigate("/");
     } catch (error) {
       console.log(error);
-      alert(error.response.data.message);
+      Swal.fire("Error", error.response.data.message, "error");
     }
   };
 

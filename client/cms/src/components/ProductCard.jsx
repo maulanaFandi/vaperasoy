@@ -29,10 +29,12 @@ export default function ProductCard() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("All");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true); // Set isLoading menjadi true saat memulai pengambilan data
       try {
         const response = await axios.get(
           `http://localhost:3000/api/products`, // Fetch all products
@@ -42,13 +44,19 @@ export default function ProductCard() {
             },
           }
         );
+
+        // Filter products based on search query
         const filteredProducts = response.data.filter((product) =>
           product.name.toLowerCase().includes(searchQuery.toLowerCase())
         );
 
-        const sortedProducts = category
-          ? filteredProducts.filter((product) => product.category === category)
-          : filteredProducts;
+        // Filter products based on category if category is not "All"
+        const sortedProducts =
+          category === "All"
+            ? filteredProducts // Display all products if category is "All"
+            : filteredProducts.filter(
+                (product) => product.category === category
+              );
 
         setTotalPages(Math.ceil(sortedProducts.length / 12)); // Calculate total pages
         setProducts(sortedProducts);
@@ -58,6 +66,8 @@ export default function ProductCard() {
           icon: "error",
           text: "Something went wrong!",
         });
+      } finally {
+        setIsLoading(false); // Set isLoading menjadi false setelah pengambilan data selesai
       }
     };
     fetchData();
@@ -115,15 +125,27 @@ export default function ProductCard() {
           <Select
             id="category"
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => {
+              const selectedCategory = e.target.value;
+              setCategory(selectedCategory);
+              if (selectedCategory === "") {
+                setSearchQuery(""); // Clear search query when "All" category is selected
+              }
+            }}
             sx={{ minWidth: 120, height: 57, ml: 2, mt: 1 }}>
+            <MenuItem value="All">All</MenuItem>
             <MenuItem value="Liquid">Liquid</MenuItem>
             <MenuItem value="Device">Devices</MenuItem>
             <MenuItem value="Accessories">Accessories</MenuItem>
           </Select>
         </Grid>
       </Grid>
-      {paginatedProducts.length > 0 ? (
+      {isLoading ? (
+        <Box
+          sx={{ display: "flex", justifyContent: "center", marginTop: "50px" }}>
+          <CircularProgress />
+        </Box>
+      ) : paginatedProducts.length > 0 ? (
         paginatedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
             <Card
