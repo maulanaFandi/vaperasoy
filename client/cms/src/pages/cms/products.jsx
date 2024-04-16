@@ -7,7 +7,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { DataGrid, GridActionsCellItem, GridRowModes } from "@mui/x-data-grid";
-import { Button, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import Swal from "sweetalert2";
 
 export default function Products() {
@@ -286,59 +286,6 @@ export default function Products() {
     }
   };
 
-  const handleUploadClick = async (id) => {
-    if (!file) {
-      // Show error message if no file is selected
-      Swal.fire({
-        title: "Error",
-        text: "Please select a file to upload.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      // Append other fields if needed
-      // For example:
-      // formData.append("name", newName);
-
-      // Send the form data to the server
-      await axios.patch(`http://localhost:3000/api/products/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-
-      // Show success message
-      Swal.fire({
-        title: "Success",
-        text: "Image uploaded successfully.",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
-
-      // Reset the file state
-      setFile(null);
-
-      // Refresh the data after successful upload if needed
-      fetchData(); // Assuming fetchData function is defined to fetch updated data
-    } catch (error) {
-      console.error("Error uploading image:", error);
-
-      // Show error message
-      Swal.fire({
-        title: "Error",
-        text: "Failed to upload image. Please try again later.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-    }
-  };
   const handleFileChange = (e, id) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -354,22 +301,18 @@ export default function Products() {
     }
 
     reader.onloadend = () => {
-      const imageUrl = reader.result;
-
       // Perbarui gambar untuk produk dengan id yang sesuai
       const updatedRows = rows.map((row) => {
         if (row.id === id) {
           return {
             ...row,
-            imageUrl: imageUrl,
+            imageUrl: reader.result,
           };
         }
         return row;
       });
-
       setRows(updatedRows);
     };
-
     if (file) {
       reader.readAsDataURL(file);
       setFile(file); // Perbarui variabel file
@@ -402,21 +345,14 @@ export default function Products() {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
         if (isInEditMode) {
           return (
-            <div>
+            <Grid>
               <input
                 accept="image/*"
                 id="contained-button-file"
                 type="file"
                 onChange={(e) => handleFileChange(e)}
               />
-              <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                onClick={() => handleUploadClick(id)}>
-                Upload
-              </Button>
-            </div>
+            </Grid>
           );
         }
       },
