@@ -7,12 +7,14 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { DataGrid, GridActionsCellItem, GridRowModes } from "@mui/x-data-grid";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import Swal from "sweetalert2";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 export default function Products() {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,6 +49,8 @@ export default function Products() {
       ...prevModesModel,
       [id]: { mode: GridRowModes.Edit },
     }));
+    // Reset file state when entering edit mode
+    setFile(null);
   };
 
   const handleSaveClick = async (id) => {
@@ -77,7 +81,6 @@ export default function Products() {
           }));
         } else {
           console.error("Row with ID", id, "not found.");
-          // Handle the case when row with given ID is not found
         }
       } else {
         Swal.fire({
@@ -133,7 +136,6 @@ export default function Products() {
       }
     } catch (error) {
       console.error("Error deleting data:", error);
-      // Show error message
       Swal.fire({
         title: "Error!",
         text: `Failed to delete product with ID ${id}. Please try again later.`,
@@ -207,7 +209,7 @@ export default function Products() {
     });
 
     if (!formValues) {
-      return; // Exit function if no valid formValues
+      return;
     }
 
     const [quantity, paymentMethod] = formValues;
@@ -224,7 +226,6 @@ export default function Products() {
       });
 
       if (result.isConfirmed) {
-        // Check if product exists and if its stock is greater than zero
         const product = rows.find((row) => row.id === id);
         if (!product) {
           throw new Error("Product not found.");
@@ -233,7 +234,6 @@ export default function Products() {
           throw new Error("Not enough stock.");
         }
 
-        // Proceed with purchase
         await axios.post(
           `http://localhost:3000/api/products/${id}/purchases`,
           { quantity, paymentMethod },
@@ -244,12 +244,11 @@ export default function Products() {
           }
         );
 
-        // Update the stock locally after a successful purchase
         const updatedRows = rows.map((row) => {
           if (row.id === id) {
             return {
               ...row,
-              stock: row.stock - quantity, // Deduct purchased quantity from stock
+              stock: row.stock - quantity,
             };
           }
           return row;
@@ -280,6 +279,63 @@ export default function Products() {
     }
   };
 
+  const handleUploadClick = async (id) => {
+    if (!file) {
+      // Show error message if no file is selected
+      Swal.fire({
+        title: "Error",
+        text: "Please select a file to upload.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      // Append other fields if needed
+      // For example:
+      // formData.append("name", newName);
+
+      // Send the form data to the server
+      await axios.patch(`http://localhost:3000/api/products/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      // Show success message
+      Swal.fire({
+        title: "Success",
+        text: "Image uploaded successfully.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+
+      // Reset the file state
+      setFile(null);
+
+      // Refresh the data after successful upload if needed
+      fetchData(); // Assuming fetchData function is defined to fetch updated data
+    } catch (error) {
+      console.error("Error uploading image:", error);
+
+      // Show error message
+      Swal.fire({
+        title: "Error",
+        text: "Failed to upload image. Please try again later.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
   const columns = [
     { field: "_id", headerName: "ID", width: 200 },
     { field: "name", headerName: "Name", width: 180, editable: true },
@@ -297,6 +353,28 @@ export default function Products() {
       headerName: "Image Url",
       width: 180,
       editable: true,
+    },
+    {
+      field: "edit",
+      headerName: "Upload",
+      width: 100,
+      renderCell: ({ id }) => {
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+        if (isInEditMode) {
+          return (
+            <div>
+              <input type="file" onChange={handleFileChange} />
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={() => handleUploadClick(id)}>
+                Upload
+              </Button>
+            </div>
+          );
+        }
+      },
     },
     {
       field: "category",
