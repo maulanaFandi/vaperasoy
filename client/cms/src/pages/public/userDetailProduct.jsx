@@ -34,6 +34,7 @@ const UserDetailProduct = () => {
             },
           }
         );
+        console.log(response.data);
         setProductData(response.data);
         setLoading(false);
       } catch (error) {
@@ -172,15 +173,21 @@ const UserDetailProduct = () => {
                 justifyContent: "center",
               }}>
               <Typography variant="h5">{productData.type}</Typography>
-              {(productData.type !== "Accessories") && (
+              {productData.type !== "Accessories" && (
                 <Typography ml={2} variant="h5">
                   {productData.size}
                 </Typography>
               )}
 
-              {productData.category === "Liquid" && (
+              {productData.type !== "Accessories" && (
                 <Typography ml={2} variant="h5">
                   {productData.nic}
+                </Typography>
+              )}
+
+              {productData.category !== "Liquid" && (
+                <Typography ml={2} variant="h5">
+                  {productData.ohm}
                 </Typography>
               )}
             </Box>
