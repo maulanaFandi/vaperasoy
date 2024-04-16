@@ -9,7 +9,6 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { DataGrid, GridActionsCellItem, GridRowModes } from "@mui/x-data-grid";
 import { Button, Typography } from "@mui/material";
 import Swal from "sweetalert2";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 export default function Products() {
   const [rows, setRows] = useState([]);
@@ -160,7 +159,13 @@ export default function Products() {
   const processRowUpdate = async (newRow) => {
     try {
       const { _id, ...updateDataWithoutId } = newRow;
-      // Update data on the server
+
+      // Jika ada file yang dipilih, tambahkan imageUrl ke updateDataWithoutId
+      if (file) {
+        updateDataWithoutId.imageUrl = file.name; // Anda perlu menyesuaikan ini sesuai dengan struktur data yang Anda gunakan
+      }
+
+      // Update data ke server
       await axios.patch(
         `http://localhost:3000/api/products/${_id}`,
         updateDataWithoutId,
@@ -170,9 +175,11 @@ export default function Products() {
           },
         }
       );
+
+      // Kembalikan newRow dengan id
       return { ...newRow, id: _id };
     } catch (error) {
-      console.log(error);
+      console.error("Error updating data:", error);
       throw error;
     }
   };
@@ -332,8 +339,41 @@ export default function Products() {
       });
     }
   };
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+  const handleFileChange = (e, id) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    if (file.size > 100 * 1024) {
+      // File terlalu besar
+      Swal.fire(
+        "Error",
+        "File terlalu besar. Maksimal 100KB diizinkan.",
+        "error"
+      );
+      return;
+    }
+
+    reader.onloadend = () => {
+      const imageUrl = reader.result;
+
+      // Perbarui gambar untuk produk dengan id yang sesuai
+      const updatedRows = rows.map((row) => {
+        if (row.id === id) {
+          return {
+            ...row,
+            imageUrl: imageUrl,
+          };
+        }
+        return row;
+      });
+
+      setRows(updatedRows);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+      setFile(file); // Perbarui variabel file
+    }
   };
 
   const columns = [
@@ -355,7 +395,7 @@ export default function Products() {
       editable: true,
     },
     {
-      field: "edit",
+      field: "upload",
       headerName: "Upload",
       width: 100,
       renderCell: ({ id }) => {
@@ -363,7 +403,12 @@ export default function Products() {
         if (isInEditMode) {
           return (
             <div>
-              <input type="file" onChange={handleFileChange} />
+              <input
+                accept="image/*"
+                id="contained-button-file"
+                type="file"
+                onChange={(e) => handleFileChange(e)}
+              />
               <Button
                 variant="contained"
                 color="primary"
