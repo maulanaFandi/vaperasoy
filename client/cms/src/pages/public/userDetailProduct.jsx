@@ -34,7 +34,6 @@ const UserDetailProduct = () => {
             },
           }
         );
-        console.log(response.data);
         setProductData(response.data);
         setLoading(false);
       } catch (error) {
