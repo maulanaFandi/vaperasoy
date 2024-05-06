@@ -174,7 +174,7 @@ export default function ProductCard() {
                   alignItems: "center",
                   height: "300px",
                 }}
-                image={product.imageUrl}
+                src={product.imageUrl}
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">

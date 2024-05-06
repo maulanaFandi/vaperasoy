@@ -133,9 +133,9 @@ function AppAppBar({ mode, toggleColorMode }) {
                 <Box sx={{ display: { xs: "none", md: "flex" } }}>
                   {isLoggedIn && (
                     <>
-                      <MenuItemLink to={"/profile"} pathName={pathName}>
+                      {/* <MenuItemLink to={"/profile"} pathName={pathName}>
                         Profile
-                      </MenuItemLink>
+                      </MenuItemLink> */}
                       <MenuItemLink to={"/products"} pathName={pathName}>
                         Products
                       </MenuItemLink>

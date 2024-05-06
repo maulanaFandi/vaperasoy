@@ -159,10 +159,13 @@ export default function Products() {
   const processRowUpdate = async (newRow) => {
     try {
       const { _id, ...updateDataWithoutId } = newRow;
-
+      const reader = new FileReader(file);
+      console.log(reader);
       // Jika ada file yang dipilih, tambahkan imageUrl ke updateDataWithoutId
       if (file) {
-        updateDataWithoutId.imageUrl = file.name; // Anda perlu menyesuaikan ini sesuai dengan struktur data yang Anda gunakan
+        // Gunakan reader.result untuk membuat URL dari file
+        const imageUrl = reader.result;
+        updateDataWithoutId.imageUrl = imageUrl;
       }
 
       // Update data ke server
@@ -286,38 +289,39 @@ export default function Products() {
     }
   };
 
-  const handleFileChange = (e, id) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
+  // const handleFileChange = (e, id) => {
+  //   const file = e.target.files[0];
+  //   // const reader = new FileReader();
+  //   if (file.size > 100 * 1024) {
+  //     // File terlalu besar
+  //     Swal.fire(
+  //       "Error",
+  //       "File terlalu besar. Maksimal 100KB diizinkan.",
+  //       "error"
+  //     );
+  //     return;
+  //   }
 
-    if (file.size > 100 * 1024) {
-      // File terlalu besar
-      Swal.fire(
-        "Error",
-        "File terlalu besar. Maksimal 100KB diizinkan.",
-        "error"
-      );
-      return;
-    }
+  //   setFile(file);
 
-    reader.onloadend = () => {
-      // Perbarui gambar untuk produk dengan id yang sesuai
-      const updatedRows = rows.map((row) => {
-        if (row.id === id) {
-          return {
-            ...row,
-            imageUrl: reader.result,
-          };
-        }
-        return row;
-      });
-      setRows(updatedRows);
-    };
-    if (file) {
-      reader.readAsDataURL(file);
-      setFile(file); // Perbarui variabel file
-    }
-  };
+  //   // reader.onloadend = () => {
+  //   //   // Perbarui gambar untuk produk dengan id yang sesuai
+  //   //   const updatedRows = rows.map((row) => {
+  //   //     if (row.id === id) {
+  //   //       return {
+  //   //         ...row,
+  //   //         imageUrl: reader.result,
+  //   //       };
+  //   //     }
+  //   //     return row;
+  //   //   });
+  //   //   setRows(updatedRows);
+  //   // };
+  //   // if (file) {
+  //   //   reader.readAsDataURL(file);
+  //   //   setFile(file); // Perbarui variabel file
+  //   // }
+  // };
 
   const columns = [
     { field: "_id", headerName: "ID", width: 200 },
@@ -331,32 +335,32 @@ export default function Products() {
       headerAlign: "left",
       editable: true,
     },
-    {
-      field: "imageUrl",
-      headerName: "Image Url",
-      width: 180,
-      editable: true,
-    },
-    {
-      field: "upload",
-      headerName: "Upload",
-      width: 100,
-      renderCell: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-        if (isInEditMode) {
-          return (
-            <Grid>
-              <input
-                accept="image/*"
-                id="contained-button-file"
-                type="file"
-                onChange={(e) => handleFileChange(e)}
-              />
-            </Grid>
-          );
-        }
-      },
-    },
+    // {
+    //   field: "imageUrl",
+    //   headerName: "Image Url",
+    //   width: 180,
+    //   editable: true,
+    // },
+    // {
+    //   field: "upload",
+    //   headerName: "Upload",
+    //   width: 100,
+    //   renderCell: ({ id }) => {
+    //     const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+    //     if (isInEditMode) {
+    //       return (
+    //         <Grid>
+    //           <input
+    //             accept="image/*"
+    //             id="contained-button-file"
+    //             type="file"
+    //             onChange={(e) => handleFileChange(e)}
+    //           />
+    //         </Grid>
+    //       );
+    //     }
+    //   },
+    // },
     {
       field: "category",
       headerName: "Category",
