@@ -25,7 +25,7 @@ export default function Testimonials() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/public/users"
+          "https://vaperasoy.vercel.app/api/public/users"
         );
         // Filter out data with role "admin"
         const filteredData = response.data.filter(

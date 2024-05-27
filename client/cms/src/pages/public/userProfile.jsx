@@ -33,7 +33,7 @@ const UserProfile = () => {
           throw new Error("Access token not found");
         }
         const response = await axios.get(
-          "http://localhost:3000/api/users/profile",
+          "https://vaperasoy.vercel.app/api/users/profile",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

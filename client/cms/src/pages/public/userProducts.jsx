@@ -38,7 +38,7 @@ export default function UserProducts() {
     const fetchDataUser = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/users/profile", // Adjust the URL accordingly
+          "https://vaperasoy.vercel.app/api/users/profile", // Adjust the URL accordingly
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -78,7 +78,7 @@ export default function UserProducts() {
       };
 
       await axios.put(
-        `http://localhost:3000/api/users/profile`, // Adjust the URL accordingly
+        `https://vaperasoy.vercel.app/api/users/profile`, // Adjust the URL accordingly
         profileData,
         {
           headers: {

@@ -26,7 +26,7 @@ const UserDetailProduct = () => {
       try {
         const id = params.id;
         const response = await axios.get(
-          `http://localhost:3000/api/products/${id}`,
+          `https://vaperasoy.vercel.app/api/products/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -61,7 +61,7 @@ const UserDetailProduct = () => {
       // Exclude _id from the update data
       const { _id, ...updateDataWithoutId } = updatedProductData;
       await axios.patch(
-        `http://localhost:3000/api/products/${productData._id}`,
+        `https://vaperasoy.vercel.app/api/products/${productData._id}`,
         updateDataWithoutId,
         {
           headers: {
@@ -84,7 +84,7 @@ const UserDetailProduct = () => {
     try {
       const { _id, ...updateDataWithoutId } = productData;
       await axios.patch(
-        `http://localhost:3000/api/products/${_id}`,
+        `https://vaperasoy.vercel.app/api/products/${_id}`,
         updateDataWithoutId,
         {
           headers: {

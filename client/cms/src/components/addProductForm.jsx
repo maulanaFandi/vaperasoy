@@ -66,7 +66,7 @@ export default function AddProductForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/api/products", formData, {
+      await axios.post("https://vaperasoy.vercel.app/api/products", formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },

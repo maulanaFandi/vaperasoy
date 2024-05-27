@@ -28,7 +28,7 @@ export default function Pricing() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/public/products"
+          "https://vaperasoy.vercel.app/api/public/products"
         );
         const randomData = response.data
           .sort(() => Math.random() - 0.5)

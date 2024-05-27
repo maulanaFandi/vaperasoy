@@ -34,7 +34,7 @@ export default function SignInSide() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/api/login", {
+      const response = await axios.post("https://vaperasoy.vercel.app/api/login", {
         email: loginInput.email,
         password: loginInput.password,
       });
@@ -57,7 +57,7 @@ export default function SignInSide() {
   useEffect(() => {
     async function handleCredentialResponse(response) {
       const { data } = await axios.post(
-        "http://localhost:3000/api/google-login",
+        "https://vaperasoy.vercel.app/api/google-login",
         {
           google_token: response.credential,
         }
@@ -100,7 +100,7 @@ export default function SignInSide() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: "url(https://source.unsplash.com/random?vape)",
+            backgroundImage: "url(https://source.unsplash.com/random)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"

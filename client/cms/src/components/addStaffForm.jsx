@@ -39,7 +39,7 @@ export default function AddStaffForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/api/staff", formData, {
+      await axios.post("https://vaperasoy.vercel.app/api/staff", formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },

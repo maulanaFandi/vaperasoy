@@ -37,7 +37,7 @@ export default function ProductCard() {
       setIsLoading(true); // Set isLoading menjadi true saat memulai pengambilan data
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/products`, // Fetch all products
+          `https://vaperasoy.vercel.app/api/products`, // Fetch all products
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("access_token")}`,

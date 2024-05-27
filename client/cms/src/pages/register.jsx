@@ -69,7 +69,7 @@ export default function Register() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/register",
+        "https://vaperasoy.vercel.app/api/register",
         formData
       );
 

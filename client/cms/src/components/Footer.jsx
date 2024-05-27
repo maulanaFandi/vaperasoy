@@ -31,7 +31,7 @@ export default function Footer() {
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
     try {
-      await axios.patch("http://localhost:3000/api/users/testimony", input, {
+      await axios.patch("https://vaperasoy.vercel.app/api/users/testimony", input, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -91,6 +91,7 @@ export default function Footer() {
               sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <ContactPhoneIcon /> +62 21 7478 8269
             </Typography>
+            <Link to={"https://wa.me/6281288907132"}>
             <Typography
               variant="body2"
               color="text.secondary"
@@ -98,6 +99,7 @@ export default function Footer() {
               sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <WhatsAppIcon /> +62 812 8890 7132
             </Typography>
+            </Link>
             <Link to={"https://www.instagram.com/vaperasoy.crd/"}>
               <Typography
                 variant="body2"

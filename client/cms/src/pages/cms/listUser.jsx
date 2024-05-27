@@ -24,7 +24,7 @@ export default function ListUser() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/users", {
+        const response = await axios.get("https://vaperasoy.vercel.app/api/users", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
@@ -65,7 +65,7 @@ export default function ListUser() {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`http://localhost:3000/api/users/${id}`, {
+        axios.delete(`https://vaperasoy.vercel.app/api/users/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },

@@ -18,7 +18,7 @@ export default function Products() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/products", {
+        const response = await axios.get("https://vaperasoy.vercel.app/api/products", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
@@ -113,7 +113,7 @@ export default function Products() {
       });
 
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:3000/api/products/${id}`, {
+        await axios.delete(`https://vaperasoy.vercel.app/api/products/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
@@ -170,7 +170,7 @@ export default function Products() {
 
       // Update data ke server
       await axios.patch(
-        `http://localhost:3000/api/products/${_id}`,
+        `https://vaperasoy.vercel.app/api/products/${_id}`,
         updateDataWithoutId,
         {
           headers: {
@@ -245,7 +245,7 @@ export default function Products() {
         }
 
         await axios.post(
-          `http://localhost:3000/api/products/${id}/purchases`,
+          `https://vaperasoy.vercel.app/products/${id}/purchases`,
           { quantity, paymentMethod },
           {
             headers: {

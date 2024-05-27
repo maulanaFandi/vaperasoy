@@ -27,7 +27,7 @@ export default function Staff() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/staff");
+        const response = await axios.get("https://vaperasoy.vercel.app/api/staff");
         const formattedData = response.data.map((row) => ({
           ...row,
           id: row._id,
@@ -119,7 +119,7 @@ export default function Staff() {
       });
 
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:3000/api/staff/${id}`);
+        await axios.delete(`https://vaperasoy.vercel.app/api/staff/${id}`);
         setRows((prevRows) => prevRows.filter((row) => row.id !== id));
         Swal.fire({
           title: "Deleted!",
@@ -163,7 +163,7 @@ export default function Staff() {
       const { id, _id, ...updateDataWithoutId } = newRow;
 
       await axios.patch(
-        `http://localhost:3000/api/staff/${_id}`,
+        `https://vaperasoy.vercel.app/api/staff/${_id}`,
         updateDataWithoutId
       );
       return { ...newRow, id: _id };
